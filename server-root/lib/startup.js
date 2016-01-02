@@ -3,6 +3,7 @@ var async = require('async');
 var path = require('path');
 var fs = require('fs');
 var properties = require('properties');
+var winston = require('winston');
 
 // TBD log's handle
 
@@ -17,12 +18,14 @@ async.waterfall([function(callback) {
     }, callback);
 }, function(config, callback) {
     // setup database connect
-    var runtimeDb = require('./runtime/db');
+    var runtimeDb = require('./db_modules/db');
     runtimeDb.connect(config.mongodb);
 
     callback(null, runtimeDb, config);
 }, function(runtimeDb, config, callback) {
     // TBD setup app'server(RESTFull)
+    var server = require('./app_server/server');
+    server(config, runtimeDb);
     callback();
 }], function(error) {
     // TBD error handle
