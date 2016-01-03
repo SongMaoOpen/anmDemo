@@ -15,10 +15,20 @@ var ServerError = function(errorCode, description, err) {
     }
 };
 
+var _getUnKnownError =  function(error) {
+    if (error instanceof Error) {
+        return new ServerError(9999, 'ERR_UNKNOWN', error);
+    } else {
+        return new ServerError(9999, error || 'ERR_UNKNOWN');
+    }
+};
+
 util.inherits(ServerError, Error);
 
 module.exports = {
-    ERR_NOT_LOGGED_IN: new ServerError(9000, 'ERR_NOT_LOGGED_IN')
-    ERR_UNKNOWN: new ServerError(9999, 'ERR_UNKNOWN'),
+    ERR_NOT_LOGGED_IN: new ServerError(9000, 'Has not logged in.'),
+    ERR_INVALID_USER: new ServerError(9001, 'Username or password invaild.'),
+    ERR_UKNOWN: new ServerError(9999, 'Unknown Error.'),
+    getUnKnownError: _getUnKnownError(error)
 };
 
