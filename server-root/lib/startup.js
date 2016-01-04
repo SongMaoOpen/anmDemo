@@ -13,7 +13,7 @@ async.waterfall([function(callback) {
     var configPath = path.join(__dirname, 'config.properties');
     properties.parse(configPath, {
         path: true,
-        namespace: true,
+        namespaces: true,
         variables: true
     }, callback);
 }, function(config, callback) {

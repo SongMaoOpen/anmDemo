@@ -8,7 +8,7 @@ var path = require('path');
 var _ = require('underscore');
 var winston = require('winston');
 
-var servicesNames = [];
+var servicesNames = ['user'];
 var services = servicesNames.map(function(service) {
     return {
         'path': service.rootPath,
@@ -48,7 +48,8 @@ module.exports = function(config, db) {
             maxAge: 365 * 24 * 60 * 60 * 1000
         },
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
+        secret: 'wtf!'
     });
     // Use session store
     app.use(session);
@@ -63,12 +64,12 @@ module.exports = function(config, db) {
     // =================== Setup Middleware End ===================
 
     // Set route
-    servics.forEach(function(service) {
+    services.forEach(function(service) {
         var serviceModule = service.module;
         var targetObject = service.path;
 
         var fullpath = '/' + config.server.context + '/';
-        if (service.path != null || service.path.lenth > 0) {
+        if (service.path != null && service.path.length > 0) {
             fullpath += service.path;
         }
         for (var key in serviceModule.actions) {
@@ -94,5 +95,7 @@ module.exports = function(config, db) {
                 app.route(fullpath).delete(callback(req, res));
             }
         }
+
+        console.log('APP Server Startup');
     });
 };
