@@ -36,3 +36,6 @@ user.actions.login = {
         });
     }
 };
+
+// export module
+module.exports = user;
