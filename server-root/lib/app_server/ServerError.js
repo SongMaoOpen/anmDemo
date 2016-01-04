@@ -8,10 +8,6 @@ var ServerError = function(errorCode, description, err) {
     if (errorCode === 9999) {
         err = err || new Error();
         this.stack = err.stack;
-        require('../runtime/loggers').get('caught-exceptions').error({
-            'errorCode': this.errorCode,
-            'stack': (this.stack || '').split('\n')
-        });
     }
 };
 
@@ -29,6 +25,6 @@ module.exports = {
     ERR_NOT_LOGGED_IN: new ServerError(9000, 'Has not logged in.'),
     ERR_INVALID_USER: new ServerError(9001, 'Username or password invaild.'),
     ERR_UKNOWN: new ServerError(9999, 'Unknown Error.'),
-    getUnKnownError: _getUnKnownError(error)
+    getUnKnownError: _getUnKnownError
 };
 

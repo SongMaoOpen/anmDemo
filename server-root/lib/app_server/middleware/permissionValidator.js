@@ -1,7 +1,7 @@
 var async = require('async');
 var _ = require('underscore');
 
-var ServerError = require('../server-error');
+var ServerError = require('../ServerError');
 var _validatorsMap = {};
 
 var _init = function(services) {
