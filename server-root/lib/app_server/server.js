@@ -10,10 +10,7 @@ var winston = require('winston');
 
 var servicesNames = ['user'];
 var services = servicesNames.map(function(service) {
-    return {
-        'path': service.rootPath,
-        'module': require('./app/' + service)
-    };
+    return require('./app/' + service);
 });
 
 module.exports = function(config, db) {
@@ -65,16 +62,13 @@ module.exports = function(config, db) {
 
     // Set route
     services.forEach(function(service) {
-        var serviceModule = service.module;
-        var targetObject = service.path;
-
         var fullpath = '/' + config.server.context + '/';
-        if (service.path != null && service.path.length > 0) {
-            fullpath += service.path;
+        if (service.rootPath != null && service.rootPath.length > 0) {
+            fullpath += service.rootPath;
         }
-        for (var key in serviceModule.actions) {
+        for (var key in service.actions) {
 
-            var action = serviceModule.actions[key];
+            var action = service.actions[key];
 
             var actionPath = fullpath;
             if (action.path === null) {
@@ -86,13 +80,13 @@ module.exports = function(config, db) {
             var method = action.method.toUpperCase();
             var callback = action.execute;
             if (method === 'GET') {
-                app.route(fullpath).get(callback(req, res));
+                app.route(fullpath).get(callback);
             } else if (method === 'POST') {
-                app.route(fullpath).post(callback(req, res));
+                app.route(fullpath).post(callback);
             } else if (method === 'PUT') {
-                app.route(fullpath).put(callback(req, res));
+                app.route(fullpath).put(callback)
             } else if (method === 'DELETE') {
-                app.route(fullpath).delete(callback(req, res));
+                app.route(fullpath).delete(callback);
             }
         }
 
