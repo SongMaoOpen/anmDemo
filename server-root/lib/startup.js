@@ -1,4 +1,4 @@
-// import modules就
+// import modules
 var async = require('async');
 var path = require('path');
 var fs = require('fs');
