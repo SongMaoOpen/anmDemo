@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="anmApp">
 <head lang="zh-cn">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,13 +9,18 @@
     <link href="./assets/css/bootstarp/css/bootstrap.css" rel="stylesheet">
     <!-- font awesome -->
     <link href="./assets/css/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- angular.js -->
+    <script src="./assets/js/angularjs/angular.js"></script>
+    <!-- async -->
+    <script src="./assets/js/async/async.js"></script>
+    <!-- jQuery -->
+    <script src="./assets/js/jquery/jquery-2.1.4.js"></script>
 </head>
 <body>
-    Hello, world!
+    <header>
+    </header>
+    <div ng-view></div>
+    <footer>
+    </footer>
 </body>
-
-<!-- jQuery -->
-<script src="./assets/js/angularjs/angular.js"></script>
-<script src="./assets/js/async/async.js"></script>
-<script src="./assets/js/jquery/jquery-2.1.4.js"></script>
 </html>
