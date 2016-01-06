@@ -8,6 +8,15 @@
             controller: 'MainController'
         });
     }]);
-    app.controller('MainController', [function() {
+    app.controller('MainController', ['$scope', '$location', function($scope, $location) {
+        $scope.gotoSignIn = function() {
+            // TBD
+            console.log('goto Sign In');
+        };
+
+        $scope.gotoSignUp = function() {
+            $location.path('/signup');
+            $location.replace();
+        };
     }]);
 }());
