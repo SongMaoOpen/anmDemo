@@ -12,10 +12,22 @@
 
     // define controller
     app.controller('SignUpController', ['$scope', '$location', function($scope, $location) {
-        $scope.foobar = 'hello signup';
+
         $scope.gotoMenu = function() {
             $location.path('/');
             $location.replace();
+        };
+
+        $scope.signup = function(user) {
+            console.log(user);
+            $.ajax('http://localhost:30001/services/user/signup', {
+                data: user,
+                method: 'PUT'
+            }).done(function(msg) {
+                console.log(msg);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR, textStatus, errorThrown);
+            });
         };
     }]);
 }());

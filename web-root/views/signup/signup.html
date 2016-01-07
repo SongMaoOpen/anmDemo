@@ -1,12 +1,11 @@
 <div class="page-header">
     <h1>Sign up a new user</h1>
 </div>
-{{foobar}}
 <div class="row voffset-15">
     <div class="col-sm-offset-3 col-sm-6">
         <div class="input-group input-group-lg">
             <span class="input-group-addon" id="username-addon"><i class="fa fa-user fa-fw"></i></span>
-            <input type="text" class="form-control" placeholder="Username" aria-describedby="username-addon">
+            <input type="text" class="form-control" placeholder="Username" aria-describedby="username-addon" ng-model="user.username">
         </div>
     </div>
 </div>
@@ -14,7 +13,7 @@
     <div class="col-sm-offset-3 col-sm-6">
         <div class="input-group input-group-lg">
             <span class="input-group-addon" id="passwd-addon"><i class="fa fa-unlock-alt fa-fw"></i></span>
-            <input type="password" class="form-control" placeholder="Password" aria-describedby="passwd-addon">
+            <input type="password" class="form-control" placeholder="Password" aria-describedby="passwd-addon" ng-model="user.password">
         </div>
     </div>
 </div>
@@ -22,13 +21,13 @@
     <div class="col-sm-offset-3 col-sm-6">
         <div class="input-group input-group-lg">
             <span class="input-group-addon" id="email-addon"><i class="fa fa-envelope fa-fw"></i></span>
-            <input type="email" class="form-control" placeholder="Email" aria-describedby="email-addon">
+            <input type="email" class="form-control" placeholder="Email" aria-describedby="email-addon" ng-model="user.email">
         </div>
     </div>
 </div>
 <div class="row voffset-15">
     <div class="col-sm-offset-3 col-sm-3">
-        <button type="button" class="btn btn-primary btn-lg btn-block">
+        <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="signup(user)">
             <i class="fa fa-user-plus"></i> Sign Up
         </button>
     </div>
