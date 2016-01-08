@@ -6,8 +6,8 @@ var sessionMongoose = require('session-mongoose');
 var bodyParser = require('body-parser');
 var path = require('path');
 var _ = require('underscore');
-var winston = require('winston');
 var logger = require('../runtime/logger').getLogger();
+var ResponseHelper = require('./helper/ResponseHelper');
 
 var servicesNames = ['user'];
 var services = servicesNames.map(function(service) {
@@ -49,16 +49,22 @@ module.exports = function(config, db) {
         saveUninitialized: false,
         secret: 'wtf!'
     });
+
     // Use session store
     app.use(session);
     app.use(require('./middleware/queryStringParser')); // parse GET method's queryString to json
+
     // parse body to parse json
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+
     // Initilize checker fillter
     app.use(require('./middleware/permissionValidator')(services));
+
+    // Set error handler
+    app.use(_errorHandleMiddleware);
     // =================== Setup Middleware End ===================
 
     // Set route
@@ -93,4 +99,13 @@ module.exports = function(config, db) {
 
         logger.info('APP Server Startup');
     });
+};
+
+var _errorHandleMiddleware = function(error, req, res, next) {
+    if (!error) {
+        next();
+    } else {
+        res.status(500);
+        ResponseHelper.buildResponse(res, error);
+    }
 };
