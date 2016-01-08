@@ -1,0 +1,24 @@
+/* =========== footer begin =========== */
+header {
+  padding-bottom: 36px;
+}
+/* =========== footer end =========== */
+
+/* =========== footer begin =========== */
+footer {
+  padding-top: 24px;
+  padding-bottom: 36px;
+  text-align: center;
+}
+/* =========== footer end =========== */
+
+/* =========== margin end =========== */
+.voffset-02 { margin-top: 2px; }
+.voffset-05 { margin-top: 5px; }
+.voffset-10 { margin-top: 10px; }
+.voffset-15 { margin-top: 15px; }
+.voffset-30 { margin-top: 30px; }
+.voffset-40 { margin-top: 40px; }
+.voffset-60 { margin-top: 60px; }
+.voffset-80 { margin-top: 80px; }
+/* =========== magin end =========== */

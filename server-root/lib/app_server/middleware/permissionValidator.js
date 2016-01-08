@@ -6,12 +6,23 @@ var _validatorsMap = {};
 
 var _init = function(services) {
     services.forEach(function(service) {
-        var module = service.module;
-        var path = service.path;
-        for (var id in module) {
-            var validators = module[id].permissionValidators;
+        var fullpath = '/' + global.config.server.context + '/';
+        if (service.rootPath != null && service.rootPath.length > 0) {
+            fullpath += service.rootPath;
+        }
+        for (var key in service.actions) {
+            var action = service.actions[key];
+            var validators = action.permissionValidators;
+
+            var actionPath = fullpath;
+            if (action.path === null) {
+                actionPath += '/' + key;
+            } else if (action.path.length > 0) {
+                actionPath += '/' + action.path;
+            }
+
             if (validators) {
-                _validatorsMap['/services/' + path + '/' + id] = validators;
+                _validatorsMap[actionPath] = validators;
             }
         }
     });
