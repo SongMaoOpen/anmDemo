@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var _ = require('underscore');
 var winston = require('winston');
+var logger = require('../runtime/logger').getLogger();
 
 var servicesNames = ['user'];
 var services = servicesNames.map(function(service) {
@@ -84,12 +85,12 @@ module.exports = function(config, db) {
             } else if (method === 'POST') {
                 app.route(actionPath).post(callback);
             } else if (method === 'PUT') {
-                app.route(actionPath).put(callback)
+                app.route(actionPath).put(callback);
             } else if (method === 'DELETE') {
                 app.route(actionPath).delete(callback);
             }
         }
 
-        console.log('APP Server Startup');
+        logger.info('APP Server Startup');
     });
 };

@@ -1,5 +1,6 @@
 // import third party library
 var mongoose = require('mongoose');
+var async = require('async');
 
 // import model
 var Users = require('../../db_modules/models/users');
@@ -64,10 +65,10 @@ user.actions.signup = {
                 }
             });
         }, function(callback) {
-            var user = new User({
+            var user = new Users({
                 username: username,
                 password: password,
-                email: email
+                email: mail
             });
 
             user.save(function(error, user) {
