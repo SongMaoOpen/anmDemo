@@ -18,8 +18,9 @@
             $location.replace();
         };
 
-        $scope.signup = function(user) {
+        $scope.signup = function(user, thisForm) {
             console.log(user);
+            /*
             $.ajax('http://localhost:30001/services/user/signup', {
                 data: user,
                 method: 'PUT'
@@ -28,6 +29,7 @@
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
             });
+            */
         };
     }]);
 }());
