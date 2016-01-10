@@ -26,6 +26,6 @@ footer {
 /* =========== form begin =========== */
 
 .validateForm input.ng-invalid {
-    background-color: #FA787E;
-  }
+    border-color: #FA787E;
+}
 /* =========== form end =========== */

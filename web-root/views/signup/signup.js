@@ -19,8 +19,12 @@
         };
 
         $scope.signup = function(user, thisForm) {
-            console.log(user);
-            /*
+            thisForm.username.$setDirty();
+            thisForm.password.$setDirty();
+            thisForm.email.$setDirty();
+            if (thisForm.$invalid) {
+                return;
+            }
             $.ajax('http://localhost:30001/services/user/signup', {
                 data: user,
                 method: 'PUT'
@@ -29,7 +33,6 @@
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
             });
-            */
         };
     }]);
 }());

@@ -1,19 +1,15 @@
 <form novalidate name="signupForm" ng-submit="signup(user, signupForm)">
-<div class="alert alert-danger" ng-show="signupForm.$submitted && signupForm.$invalid" role="alert">
-    <span ng-show="signupForm.username.$error.required"><i class="fa fa-exclamation-triangle"></i> Username is required!<br></span>
-    <span ng-show="signupForm.password.$error.required"><i class="fa fa-exclamation-triangle"></i> Password is required!<br></span>
-    <span ng-show="signupForm.email.$error.required"><i class="fa fa-exclamation-triangle"></i> Email is required!<br></span>
-    <span ng-show="signupForm.email.$error.email"><i class="fa fa-exclamation-triangle"></i> Email is invalid address!<br></span>
-</div>
 <div class="page-header">
     <h1>Sign up a new user</h1>
 </div>
-{{singupForm.email.$error}}
 <div class="row voffset-15">
     <div class="col-sm-offset-3 col-sm-6">
-        <div class="input-group input-group-lg">
+        <div class="input-group input-group-lg" ng-class="{ 'has-error' : signupForm.username.$invalid && !signupForm.username.$pristine }">
             <span class="input-group-addon" id="username-addon"><i class="fa fa-user fa-fw"></i></span>
             <input type="text" class="form-control" name="username" placeholder="Username" aria-describedby="username-addon" ng-model="user.username" required>
+        </div>
+        <div ng-show="signupForm.username.$invalid && !signupForm.username.$pristine" class="has-error ">
+            <p class="help-block">Username is required.</p>
         </div>
     </div>
 </div>
@@ -23,6 +19,9 @@
             <span class="input-group-addon" id="passwd-addon"><i class="fa fa-unlock-alt fa-fw"></i></span>
             <input type="password" class="form-control" name="password" placeholder="Password" aria-describedby="passwd-addon" ng-model="user.password" required>
         </div>
+        <div ng-show="signupForm.password.$invalid && !signupForm.password.$pristine" class="has-error">
+            <p class="help-block">Password is required.</p>
+        </div>
     </div>
 </div>
 <div class="row voffset-15">
@@ -30,6 +29,10 @@
         <div class="input-group input-group-lg">
             <span class="input-group-addon" id="email-addon"><i class="fa fa-envelope fa-fw"></i></span>
             <input type="email" class="form-control" name="email" placeholder="Email" aria-describedby="email-addon" ng-model="user.email" required>
+        </div>
+        <div ng-show="signupForm.email.$invalid && !signupForm.email.$pristine" class="has-error">
+            <p class="help-block" ng-show="signupForm.email.$error.required">Email is required.</p>
+            <p class="help-block" ng-show="signupForm.email.$error.email">Enter a valid email.</p>
         </div>
     </div>
 </div>
