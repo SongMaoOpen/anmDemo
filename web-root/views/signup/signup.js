@@ -13,6 +13,8 @@
     // define controller
     app.controller('SignUpController', ['$scope', '$location', function($scope, $location) {
 
+        $scope.error = '';
+
         $scope.gotoMenu = function() {
             $location.path('/');
             $location.replace();
@@ -30,8 +32,15 @@
                 method: 'PUT'
             }).done(function(msg) {
                 console.log(msg);
+                if (msg.errorInfo != null) {
+                    // Server API Error.
+                    $scope.$apply(function() {
+                        $scope.error = msg.errorInfo.description;
+                    });
+                }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
+                $scope.error = 'Server Error!';
             });
         };
     }]);
