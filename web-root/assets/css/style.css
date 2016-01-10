@@ -12,7 +12,7 @@ footer {
 }
 /* =========== footer end =========== */
 
-/* =========== margin end =========== */
+/* =========== margin begin =========== */
 .voffset-02 { margin-top: 2px; }
 .voffset-05 { margin-top: 5px; }
 .voffset-10 { margin-top: 10px; }
@@ -22,3 +22,10 @@ footer {
 .voffset-60 { margin-top: 60px; }
 .voffset-80 { margin-top: 80px; }
 /* =========== magin end =========== */
+
+/* =========== form begin =========== */
+
+.validateForm input.ng-invalid {
+    border-color: #FA787E;
+}
+/* =========== form end =========== */
