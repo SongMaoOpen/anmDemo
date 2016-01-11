@@ -10,8 +10,8 @@
     }]);
     app.controller('MainController', ['$scope', '$location', function($scope, $location) {
         $scope.gotoSignIn = function() {
-            // TBD
-            console.log('goto Sign In');
+            $location.path('/signin');
+            $location.replace();
         };
 
         $scope.gotoSignUp = function() {

@@ -31,6 +31,7 @@ user.actions.login = {
                 // user not exists
                 ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
             } else {
+                req.session.userId = user._id;
                 // success
                 ResponseHelper.buildResponse(res, null, user);
             }

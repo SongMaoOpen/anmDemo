@@ -40,7 +40,9 @@
                 }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
-                $scope.error = 'Server Error!';
+                $scope.$apply(function() {
+                    $scope.error = 'Server Error!';
+                });
             });
         };
     }]);
