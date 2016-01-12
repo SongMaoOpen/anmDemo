@@ -1,11 +1,19 @@
 (function() {
     'use strict';
-    angular.module('anmApp', [
+    var app = angular.module('anmApp', [
             'ngRoute',
             'anmApp.main',
             'anmApp.signup',
             'anmApp.signin'
-    ]).config(['$routeProvider', function($routeProvider) {
+    ]);
+
+    // set router
+    app.config(['$routeProvider', function($routeProvider) {
         $routeProvider.otherwise({redirectTo: '/'});
     }]);
+
+    // set constant
+    app.constant('config', {
+        apiUrl: 'http://localhost:30001/services/'
+    });
 }());

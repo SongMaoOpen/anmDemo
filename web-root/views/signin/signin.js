@@ -13,7 +13,7 @@
     }]);
 
     // define controller
-    app.controller('SignInController', ['$scope', '$location', function($scope, $location) {
+    app.controller('SignInController', ['$scope', '$location', 'config', function($scope, $location, config) {
         $scope.error;
 
         $scope.gotoMenu = function() {
@@ -22,9 +22,9 @@
         };
 
         $scope.signin = function(user, thisForm) {
-            $.ajax('http://localhost:30001/services/user/login', {
+            $.ajax(config.apiUrl + 'user/login', {
                 data: user,
-                method: 'POST'
+                method: 'PUT'
             }).done(function(msg) {
                 if (msg.errorInfo != null) {
                     $scope.$apply(function() {

@@ -25,7 +25,7 @@ module.exports = {
     ERR_NOT_LOGGED_IN: new ServerError(9000, 'Has not logged in.'),
     ERR_INVALID_USER: new ServerError(9001, 'Username or password invaild.'),
     ERR_NOT_ENOUGH_PARAM: new ServerError(9002, 'Parameter is not enough.'),
-    ERR_USER_IS_EXISTS: new ServerError(9003, 'user is exists.'),
+    ERR_USER_IS_EXISTS: new ServerError(9003, 'User is exists.'),
     ERR_UKNOWN: new ServerError(9999, 'Unknown Error.'),
     getUnKnownError: _getUnKnownError
 };
