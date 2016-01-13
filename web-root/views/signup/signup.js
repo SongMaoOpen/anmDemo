@@ -11,7 +11,7 @@
     }]);
 
     // define controller
-    app.controller('SignUpController', ['$scope', '$location', function($scope, $location) {
+    app.controller('SignUpController', ['$scope', '$location', 'config', function($scope, $location, config) {
 
         $scope.error = '';
 
@@ -27,9 +27,9 @@
             if (thisForm.$invalid) {
                 return;
             }
-            $.ajax('http://localhost:30001/services/user/signup', {
+            $.ajax(config.apiUrl + 'user/signup', {
                 data: user,
-                method: 'PUT'
+                method: 'POST'
             }).done(function(msg) {
                 console.log(msg);
                 if (msg.errorInfo != null) {
@@ -40,7 +40,9 @@
                 }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR, textStatus, errorThrown);
-                $scope.error = 'Server Error!';
+                $scope.$apply(function() {
+                    $scope.error = 'Server Error!';
+                });
             });
         };
     }]);

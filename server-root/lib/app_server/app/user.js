@@ -7,6 +7,7 @@ var Users = require('../../db_modules/models/users');
 
 // import helper
 var ResponseHelper = require('../helper/ResponseHelper');
+var MongoHelper = require('../helper/MongoHelper');
 var ServerError = require('../ServerError');
 
 var user = {
@@ -16,7 +17,7 @@ var user = {
 
 user.actions.login = {
     path: 'login',
-    method: 'post',
+    method: 'put',
     execute: function(req, res) {
         var username = req.body.username || '';
         var password = req.body.password || '';
@@ -31,6 +32,7 @@ user.actions.login = {
                 // user not exists
                 ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
             } else {
+                req.session.userId = user._id;
                 // success
                 ResponseHelper.buildResponse(res, null, user);
             }
@@ -40,7 +42,7 @@ user.actions.login = {
 
 user.actions.signup = {
     path: 'signup',
-    method: 'put',
+    method: 'post',
     execute: function(req, res) {
         var param = req.body;
         var mail = param.email || '';
@@ -83,6 +85,26 @@ user.actions.signup = {
             callback(null, user);
         }], function(error, user) {
             ResponseHelper.buildResponse(res, error, user);
+        });
+    }
+};
+
+user.actions.getMe = {
+    path: '',
+    method: 'get',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        var _id = MongoHelper.parseObjectId(req.session.userId);
+        Users.findOne({
+            _id: _id
+        }, function(error, user) {
+            if (error) {
+                ResponseHelper.buildResponse(res, error);
+            } else if (!user) {
+                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+            } else {
+                ResponseHelper.buildResponse(res, null, user);
+            }
         });
     }
 };
