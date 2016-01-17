@@ -32,9 +32,13 @@ user.actions.login = {
                 // user not exists
                 ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
             } else {
-                req.session.userId = user._id;
-                // success
-                ResponseHelper.buildResponse(res, null, user);
+                if (user.password === password) {
+                    req.session.userId = user._id;
+                    // success
+                    ResponseHelper.buildResponse(res, null, user);
+                } else {
+                    ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
+                }
             }
         });
     }

@@ -11,13 +11,13 @@
     }]);
 
     // define controller
-    app.controller('SignUpController', ['$scope', '$location', 'config', function($scope, $location, config) {
+    app.controller('SignUpController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
 
         $scope.error = '';
 
         $scope.gotoMenu = function() {
             $location.path('/');
-            $location.replace();
+            //$location.replace();
         };
 
         $scope.signup = function(user, thisForm) {
@@ -27,22 +27,16 @@
             if (thisForm.$invalid) {
                 return;
             }
-            $.ajax(config.apiUrl + 'user/signup', {
-                data: user,
-                method: 'POST'
-            }).done(function(msg) {
-                console.log(msg);
-                if (msg.errorInfo != null) {
+
+            $http.post(config.apiUrl + 'user/signup', user).then(function(response) {
+                var data = response.data;
+                if (data.errorInfo != null) {
                     // Server API Error.
-                    $scope.$apply(function() {
-                        $scope.error = msg.errorInfo.description;
-                    });
+                    $scope.error = data.errorInfo.description;
                 }
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR, textStatus, errorThrown);
-                $scope.$apply(function() {
-                    $scope.error = 'Server Error!';
-                });
+            }, function(response) {
+                //console.log(response);
+                $scope.error = 'Server Error!';
             });
         };
     }]);
