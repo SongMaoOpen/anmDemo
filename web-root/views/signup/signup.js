@@ -17,7 +17,7 @@
 
         $scope.gotoMenu = function() {
             $location.path('/');
-            $location.replace();
+            //$location.replace();
         };
 
         $scope.signup = function(user, thisForm) {
