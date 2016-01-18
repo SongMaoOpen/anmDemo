@@ -30,6 +30,7 @@
 
             $http.post(config.apiUrl + 'user/signup', user).then(function(response) {
                 var data = response.data;
+                console.log('response', response.data);
                 if (data.errorInfo != null) {
                     // Server API Error.
                     $scope.error = data.errorInfo.description;
