@@ -62,17 +62,18 @@ describe('SignUpController', function() {
     });
 
     describe('$scope.signup', function() {
-        it('test signup new use success', () => {
+        it('test signup new use success', function() {
             $scope.error = '';
-            $httpBackend.expectPOST('user/signup', user).respond(200, '');
+            $httpBackend.expectPOST('user/signup', user).respond(200,{
+            });
             $scope.signup(user, thisForm);
-            expect($scope.error).toBe('');
             $httpBackend.flush();
+            expect($scope.error).toBe('');
         });
     });
 
     describe('$scope.signup', function() {
-        it('test signup new use fail', () => {
+        it('test signup new user fail', function() {
             var errorMsg = 'unit test error!';
             $httpBackend.whenPOST('user/signup', user).respond({
                 errorInfo: {
@@ -80,9 +81,17 @@ describe('SignUpController', function() {
                 }
             });
             $scope.signup(user, thisForm);
-            console.log($scope.error);
-            expect($scope.error).toBe(errorMsg);
             $httpBackend.flush();
+            expect($scope.error).toBe(errorMsg);
+        });
+    });
+
+    describe('$scope.signup', function() {
+        it('test signup new user: server error', function() {
+            $httpBackend.whenPOST('user/signup', user).respond(404);
+            $scope.signup(user, thisForm);
+            $httpBackend.flush();
+            expect($scope.error).toBe('Server Error!');
         });
     });
 });
