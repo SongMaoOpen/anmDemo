@@ -27,7 +27,7 @@
                 if (msg.errorInfo != null) {
                     $scope.error = msg.errorInfo.description;
                 }
-            }, function(response) {
+            }).catch(function(response) {
                 $scope.error = 'Server Error!';
             });
         };
