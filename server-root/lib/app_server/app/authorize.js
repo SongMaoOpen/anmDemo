@@ -40,7 +40,7 @@ var _login = {
                         user: user.username
                     }, global.config.authorize.token.secret, {
                         issuer: global.config.authorize.token.issuer,
-                        expiresIn: global.config.authorize.token.token
+                        expiresIn: global.config.authorize.token.expiresIn
                     });
 
                     logger.debug('user token', {
@@ -55,10 +55,10 @@ var _login = {
                             ResponseHelper.buildResponse(res, error);
                         } else {
                             ResponseHelper.buildResponse(res, null, {
-                                token: token
+                                token: user.token
                             });
                         }
-                    }):
+                    });
                 } else {
                     ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
                 }
