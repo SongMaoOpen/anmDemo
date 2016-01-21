@@ -2,23 +2,20 @@
 var mongoose = require('mongoose');
 var async = require('async');
 var jwt = require('jsonwebtoken');
-var logger = require('../runtime/logger').getLogger();
+var logger = require('../../runtime/logger').getLogger();
 
 // import model
 var Users = require('../../db_modules/models/users');
 
 // import helper
+var ResponseHelper = require('../helper/ResponseHelper');
 
 var authorize = {
     rootPath: 'authorize',
-    actions: {
-        login: _login
-    }
+    actions: {}
 };
 
-module.exports = authorize;
-
-var _login = {
+authorize.actions.login = {
     path: '',
     method: 'post',
     execute: function(req, res) {
@@ -37,14 +34,14 @@ var _login = {
             } else {
                 if (user.password === password) {
                     var token = jwt.sign({
-                        user: user.username
+                        user: user._id
                     }, global.config.authorize.token.secret, {
                         issuer: global.config.authorize.token.issuer,
                         expiresIn: global.config.authorize.token.expiresIn
                     });
 
                     logger.debug('user token', {
-                        username: user.username,
+                        id: user._id,
                         token: user.token
                     });
 
@@ -66,3 +63,5 @@ var _login = {
         });
     }
 };
+
+module.exports = authorize;

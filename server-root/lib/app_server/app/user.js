@@ -103,7 +103,7 @@ user.actions.getMe = {
     method: 'get',
     permissionValidators: ['validateLogin'],
     execute: function(req, res) {
-        var _id = MongoHelper.parseObjectId(req.session.userId);
+        var _id = MongoHelper.parseObjectId(req.body.userId);
         Users.findOne({
             _id: _id
         }, function(error, user) {
