@@ -69,6 +69,7 @@ module.exports = function(config, db) {
 
     // Set route
     services.forEach(function(service) {
+        logger.info('router config ==>' + service.rootPath + ' begin.');
         var fullpath = '/' + config.server.context + '/';
         if (service.rootPath != null && service.rootPath.length > 0) {
             fullpath += service.rootPath;
@@ -96,9 +97,9 @@ module.exports = function(config, db) {
                 app.route(actionPath).delete(callback);
             }
         }
-
-        logger.info('APP Server Startup');
+        logger.info('router config ==>' + service.rootPath + ' end.');
     });
+    logger.info('APP Server Startup');
 };
 
 var _errorHandleMiddleware = function(error, req, res, next) {
