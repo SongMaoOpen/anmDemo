@@ -74,7 +74,13 @@ user.actions.signup = {
             var user = new Users({
                 username: username,
                 password: password,
-                email: mail
+                email: mail,
+                token: jwt.sign({
+                    username: username
+                }, global.config.authorize.token.secret, {
+                    issuer: global.config.authorize.token.issuer,
+                    expiresIn: global.config.authorize.token.expiresIn
+                })
             });
 
             user.save(function(error, user) {
@@ -84,11 +90,10 @@ user.actions.signup = {
                     callback(null, user);
                 }
             });
-        }, function(user, callback) {
-            req.session.userId = user._id;
-            callback(null, user);
         }], function(error, user) {
-            ResponseHelper.buildResponse(res, error, user);
+            ResponseHelper.buildResponse(res, error, {
+                token: user.token
+            });
         });
     }
 };
