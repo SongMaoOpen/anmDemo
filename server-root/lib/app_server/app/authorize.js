@@ -9,6 +9,7 @@ var Users = require('../../db_modules/models/users');
 
 // import helper
 var ResponseHelper = require('../helper/ResponseHelper');
+var ServerError = require('../ServerError');
 
 var authorize = {
     rootPath: 'authorize',
@@ -40,10 +41,7 @@ authorize.actions.login = {
                         expiresIn: global.config.authorize.token.expiresIn
                     });
 
-                    logger.debug('user token', {
-                        id: user._id,
-                        token: user.token
-                    });
+                    logger.debug('user._id[', user._id, '], token:[', token, ']'); 
 
                     user.token = token;
                     user.save(function(error, user) {
