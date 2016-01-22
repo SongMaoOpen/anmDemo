@@ -58,9 +58,12 @@ describe('SignInController', function() {
     describe('$scope.signin', function() {
         it('test signin new use success', () => {
             $scope.error = '';
-            $httpBackend.expectPUT('user/login', user).respond(200, '');
+            $httpBackend.expectPOST('authorize', user).respond(200, {
+                token: 'abcdef'
+            });
             $scope.signin(user, thisForm);
             expect($scope.error).toBe('');
+            expect(window.localStorage.token).toBe('abcdef');
             $httpBackend.flush();
         });
     });
@@ -68,7 +71,7 @@ describe('SignInController', function() {
     describe('$scope.signin', function() {
         it('test signin new use fail', () => {
             var errorMsg = 'unit test error!';
-            $httpBackend.whenPUT('user/login', user).respond({
+            $httpBackend.whenPOST('authorize', user).respond({
                 errorInfo: {
                     description: errorMsg
                 }
@@ -81,7 +84,7 @@ describe('SignInController', function() {
 
     describe('$scope.signin', function() {
         it('test signin new user: server error', function() {
-            $httpBackend.whenPUT('user/login', user).respond(404);
+            $httpBackend.whenPOST('authorize', user).respond(404);
             $scope.signin(user, thisForm);
             $httpBackend.flush();
             expect($scope.error).toBe('Server Error!');
