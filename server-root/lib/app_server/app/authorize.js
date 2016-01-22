@@ -102,4 +102,32 @@ authorize.actions.refresh = {
     }
 };
 
+authorize.actions.logout = {
+    path: 'logout',
+    method: 'post',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        async.waterfall([function(callback) {
+            Users.findOne({
+                _id: MongoHelper.parseObjectId(req.body.userId)
+            }, function(error, user) {
+                if (error) {
+                    callback(error);
+                } else if (user) {
+                    callback(ServerError.ERR_USER_IS_NOT_EXISTS);
+                } else {
+                    callback(null, user);
+                }
+            });
+        }, function(user, callback) {
+            user.token = null;
+            user.save(function(error, user) {
+                callback(error, user);
+            });
+        }], function(error) {
+            ResponseHelper.buildResponse(res, error, {});
+        });
+    }
+};
+
 module.exports = authorize;
