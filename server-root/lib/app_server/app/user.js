@@ -15,35 +15,6 @@ var user = {
     actions: {}
 };
 
-user.actions.login = {
-    path: 'login',
-    method: 'put',
-    execute: function(req, res) {
-        var username = req.body.username || '';
-        var password = req.body.password || '';
-
-        Users.findOne({
-            username: username
-        }, function(error, user) {
-            if (error) {
-                // mongo error
-                ResponseHelper.buildResponse(res, error);
-            } else if (user === null) {
-                // user not exists
-                ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
-            } else {
-                if (user.password === password) {
-                    req.session.userId = user._id;
-                    // success
-                    ResponseHelper.buildResponse(res, null, user);
-                } else {
-                    ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
-                }
-            }
-        });
-    }
-};
-
 user.actions.signup = {
     path: 'signup',
     method: 'post',
