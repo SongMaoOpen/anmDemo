@@ -1,4 +1,4 @@
-// import third party library
+﻿// import third party library
 var mongoose = require('mongoose');
 var async = require('async');
 
@@ -9,7 +9,8 @@ var Users = require('../../db_modules/models/users');
 var ResponseHelper = require('../helper/ResponseHelper');
 var MongoHelper = require('../helper/MongoHelper');
 var ServerError = require('../ServerError');
-
+var RUserCreateTasks = require('../../db_modules/models/rUserCreateTasks');
+var user = require('./user');
 var task = {
     rootPath: 'task',
     actions: {}
@@ -40,14 +41,51 @@ task.actions.createTask = {
                 }
             });
         }, function(task, callback) {
-            req.session.name = task._id;
-            callback(null, task);
+            var taskId = task._id;
+            callback(null, task);			
         }], function(error, task) {
             ResponseHelper.buildResponse(res, error, task);
         });
     }
 };
 
-
+task.actions.updataTask = {
+	path: '',
+    method: 'put',
+	execute: function(req, res) {
+		var _id = MongoHelper.parseObjectId(req.session.taskId);
+		Tasks.findOne({
+            _id: _id
+        }, function(error, task) {
+            if (error) {
+                ResponseHelper.buildResponse(res, error);
+            } else if (!task) {
+                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+            } else {
+                ResponseHelper.buildResponse(res, null, task);
+            }
+        });
+		
+	}
+};
+task.actions.getMe = {
+    path: '',
+    method: 'get',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        var _id = MongoHelper.parseObjectId(req.session.taskId);
+        Users.findOne({
+            _id: _id
+        }, function(error, task) {
+            if (error) {
+                ResponseHelper.buildResponse(res, error);
+            } else if (!user) {
+                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+            } else {
+                ResponseHelper.buildResponse(res, null, task);
+            }
+        });
+    }
+};
 // export module
 module.exports = task;
