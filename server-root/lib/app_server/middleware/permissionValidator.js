@@ -21,7 +21,6 @@ var _init = function(services) {
         }
         for (var key in service.actions) {
             var action = service.actions[key];
-            console.log(key, action);
             var validators = action.permissionValidators;
 
             var actionPath = fullpath;
