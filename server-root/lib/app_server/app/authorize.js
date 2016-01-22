@@ -64,4 +64,22 @@ authorize.actions.login = {
     }
 };
 
+authorize.actions.refresh = {
+    path: 'refresh',
+    method: 'post',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        // generate token
+        var token = jwt.sign({
+            user: req.body.userId
+        }, global.config.authorize.token.secret, {
+            issuer: global.config.authorize.token.issuer,
+            expiresIn: global.config.authorize.token.expiresIn
+        });
+
+
+        
+    }
+};
+
 module.exports = authorize;
