@@ -34,7 +34,7 @@
                     // Server API Error.
                     $scope.error = data.errorInfo.description;
                 }
-            }, function(response) {
+            }).catch(function(response) {
                 //console.log(response);
                 $scope.error = 'Server Error!';
             });
