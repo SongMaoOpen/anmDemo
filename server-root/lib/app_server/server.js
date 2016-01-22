@@ -9,10 +9,14 @@ var _ = require('underscore');
 var logger = require('../runtime/logger').getLogger();
 var ResponseHelper = require('./helper/ResponseHelper');
 
-var servicesNames = ['user'];
+var servicesNames = [
+	'user',
+	'task'
+];
 var services = servicesNames.map(function(service) {
     return require('./app/' + service);
 });
+
 
 module.exports = function(config, db) {
     var app = express();

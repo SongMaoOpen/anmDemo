@@ -26,7 +26,12 @@
                 var msg = response.data;
                 if (msg.errorInfo != null) {
                     $scope.error = msg.errorInfo.description;
-                }
+				
+                } else {
+					$location.path('/task');
+					$location.replace();
+					
+				}
             }, function(response) {
                 $scope.error = 'Server Error!';
             });
