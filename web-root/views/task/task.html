@@ -19,28 +19,28 @@
 			</tr>
 		</thead>
 		<tbody id="table2">
-			<tr ng-repeat="pages in names">
+			<tr ng-repeat="pages in list">
 			
 				<td>
 						<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 levl3 ">
-							{{$index + 1}}
+							{{pages.id}}
 						</div>
 					</td>
 					<td>
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4  levl3">
-							<span class=""> &nbsp;</span><span>{{pages.Name}}</span>
+							<span class=""> &nbsp;</span><span>{{pages.username}}</span>
 						</div>
 					</td>
 					<td>
 						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-							{{pages.Country | uppercase}}
+							{{pages.password | uppercase}}
 						</div>
 					</td>
 				<td width=200px>
 					<button class="btn btn-success btn-xs" ng-click="updateTask()">
 						<span class="glyphicon glyphicon-pencil"></span>修改
 					</button>
-					<button class="btn btn-danger btn-xs" ng-click="delTask()">
+					<button class="btn btn-danger btn-xs" ng-click="delTask($index)">
 						<span class="glyphicon glyphicon-remove"></span>删除
 					</button>
 				</td>

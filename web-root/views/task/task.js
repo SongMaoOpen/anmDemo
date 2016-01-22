@@ -13,12 +13,23 @@
     }]);
  // define controller
     app.controller('taskController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
-     $http.get("Customers_JSON.txt").success(function(response){
-				$scope.names = response.records;		
-				
+     $http.get(config.apiUrl+'user/').success(function(data){
+			$scope.list = data;		
+			
 			});
 
-		
+	//deleted
+		$scope.delTask = function(index) {
+            $scope.call.splice(index,1);
+			console.log($sope.list);
+
+            $http.post(config.apiUrl + 'user/delTask', {index:index}).success(function(data) {
+                $scope.list = data;
+                
+            }).error(function(data,status,headers,config){
+				alert('no data')
+			})
+        };
 	
 
 
