@@ -27,6 +27,7 @@ module.exports = {
     ERR_NOT_ENOUGH_PARAM: new ServerError(9002, 'Parameter is not enough.'),
     ERR_USER_IS_EXISTS: new ServerError(9003, 'User is exists.'),
     ERR_TOKEN: new ServerError(9004, 'Invalid token.'),
+    ERR_USER_IS_NOT_EXISTS: new ServerError(9005, 'User is not exists.'),
     ERR_UKNOWN: new ServerError(9999, 'Unknown Error.'),
     getUnKnownError: _getUnKnownError
 };
