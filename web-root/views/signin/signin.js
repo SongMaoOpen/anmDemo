@@ -26,7 +26,7 @@
                 if (msg.errorInfo != null) {
                     $scope.error = msg.errorInfo.description;
                 } else {
-                    window.localStorage.token = msg.token;
+                    window.localStorage.setItem('token', msg.token);
                 }
             }).catch(function(response) {
                 $scope.error = 'Server Error!';
