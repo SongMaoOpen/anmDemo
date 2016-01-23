@@ -48,28 +48,28 @@ describe('SignInController', function() {
     }));
 
     describe('$scope.gotoMenu', function() {
-        it('test location to root', function() {
+        it('[test location to root]', function() {
             //var $scope;
             $scope.gotoMenu();
             expect($location.path).toHaveBeenCalledWith('/');
         });
     });
 
-    describe('$scope.signin', function() {
-        it('test signin new use success', () => {
+    describe('$scope.signin()', function() {
+        it('[test signin new use success]', () => {
             $scope.error = '';
             $httpBackend.expectPOST('authorize', user).respond(200, {
                 token: 'abcdef'
             });
             $scope.signin(user, thisForm);
+            $httpBackend.flush();
             expect($scope.error).toBe('');
             expect(window.localStorage.token).toBe('abcdef');
-            $httpBackend.flush();
         });
     });
 
-    describe('$scope.signin', function() {
-        it('test signin new use fail', () => {
+    describe('$scope.signin()', function() {
+        it('[test signin new use fail]', () => {
             var errorMsg = 'unit test error!';
             $httpBackend.whenPOST('authorize', user).respond({
                 errorInfo: {
@@ -82,8 +82,8 @@ describe('SignInController', function() {
         });
     });
 
-    describe('$scope.signin', function() {
-        it('test signin new user: server error', function() {
+    describe('$scope.signin()', function() {
+        it('[test signin new user: server error]', function() {
             $httpBackend.whenPOST('authorize', user).respond(404);
             $scope.signin(user, thisForm);
             $httpBackend.flush();

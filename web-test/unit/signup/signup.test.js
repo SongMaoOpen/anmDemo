@@ -53,27 +53,29 @@ describe('SignUpController', function() {
 
     }));
 
-    describe('$scope.gotoMenu', function() {
-        it('test location to root', function() {
+    describe('$scope.gotoMenu()', function() {
+        it('[test location to root]', function() {
             //var $scope;
             $scope.gotoMenu();
             expect($location.path).toHaveBeenCalledWith('/');
         });
     });
 
-    describe('$scope.signup', function() {
-        it('test signup new use success', function() {
+    describe('$scope.signup()', function() {
+        it('[test signup new use success]', function() {
             $scope.error = '';
-            $httpBackend.expectPOST('user/signup', user).respond(200,{
+            $httpBackend.expectPOST('user/signup', user).respond(200, {
+                token: '123456'
             });
             $scope.signup(user, thisForm);
             $httpBackend.flush();
             expect($scope.error).toBe('');
+            expect(window.localStorage.token).toBe('123456');
         });
     });
 
-    describe('$scope.signup', function() {
-        it('test signup new user fail', function() {
+    describe('$scope.signup()', function() {
+        it('[test signup new user fail]', function() {
             var errorMsg = 'unit test error!';
             $httpBackend.whenPOST('user/signup', user).respond({
                 errorInfo: {
@@ -86,8 +88,8 @@ describe('SignUpController', function() {
         });
     });
 
-    describe('$scope.signup', function() {
-        it('test signup new user: server error', function() {
+    describe('$scope.signup()', function() {
+        it('[test signup new user: server error]', function() {
             $httpBackend.whenPOST('user/signup', user).respond(404);
             $scope.signup(user, thisForm);
             $httpBackend.flush();
