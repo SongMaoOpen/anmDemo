@@ -15,35 +15,6 @@ var user = {
     actions: {}
 };
 
-user.actions.login = {
-    path: 'login',
-    method: 'put',
-    execute: function(req, res) {
-        var username = req.body.username || '';
-        var password = req.body.password || '';
-
-        Users.findOne({
-            username: username
-        }, function(error, user) {
-            if (error) {
-                // mongo error
-                ResponseHelper.buildResponse(res, error);
-            } else if (user === null) {
-                // user not exists
-                ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
-            } else {
-                if (user.password === password) {
-                    req.session.userId = user._id;
-                    // success
-                    ResponseHelper.buildResponse(res, null, user);
-                } else {
-                    ResponseHelper.buildResponse(res, ServerError.ERR_INVALID_USER);
-                }
-            }
-        });
-    }
-};
-
 user.actions.signup = {
     path: 'signup',
     method: 'post',
@@ -74,7 +45,13 @@ user.actions.signup = {
             var user = new Users({
                 username: username,
                 password: password,
-                email: mail
+                email: mail,
+                token: jwt.sign({
+                    username: username
+                }, global.config.authorize.token.secret, {
+                    issuer: global.config.authorize.token.issuer,
+                    expiresIn: global.config.authorize.token.expiresIn
+                })
             });
 
             user.save(function(error, user) {
@@ -84,11 +61,10 @@ user.actions.signup = {
                     callback(null, user);
                 }
             });
-        }, function(user, callback) {
-            req.session.userId = user._id;
-            callback(null, user);
         }], function(error, user) {
-            ResponseHelper.buildResponse(res, error, user);
+            ResponseHelper.buildResponse(res, error, {
+                token: user.token
+            });
         });
     }
 };
@@ -98,7 +74,7 @@ user.actions.getMe = {
     method: 'get',
     permissionValidators: ['validateLogin'],
     execute: function(req, res) {
-        var _id = MongoHelper.parseObjectId(req.session.userId);
+        var _id = MongoHelper.parseObjectId(req.body.userId);
         Users.findOne({
             _id: _id
         }, function(error, user) {

@@ -7,6 +7,10 @@ ResponseHelper.buildResponse = function(res, error, data, beforeEndResponse) {
     var json = {};
 
     if (error) {
+        if (!error.errorCode) {
+            error = ServerError.getUnKnownError(error);
+
+        }
         json = {
             errorInfo: error
         };
