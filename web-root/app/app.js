@@ -4,7 +4,11 @@
             'ngRoute',
             'anmApp.main',
             'anmApp.signup',
-            'anmApp.signin'
+            'anmApp.signin',
+			'anmApp.task',
+			'anmApp.updateTask',
+			'anmApp.createTask',
+			'anmApp.turnPage'
     ]);
 
     // set router
