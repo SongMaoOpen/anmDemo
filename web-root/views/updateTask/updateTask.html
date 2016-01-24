@@ -1,0 +1,57 @@
+﻿<form novalidate name="thisForm">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-6">
+            <div class="alert alert-danger" role="alert" ng-show="error">
+                <span>
+                    <i class="fa fa-exclamation-triangle"></i> {{error}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-6">
+            <div class="page-header">
+                <h1>createTask</h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row voffset-15">
+        <div class="col-sm-offset-3 col-sm-6">
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon" id="username-addon">
+                    <i class="fa fa-user fa-fw"></i>
+                </span>
+                <input type="text" class="form-control" name="name" placeholder="name" aria-describedby="Username-addon" ng-model="task.name">
+            </div>
+        </div>
+    </div>
+
+    <div class="row voffset-15">
+        <div class="col-sm-offset-3 col-sm-6">
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon" id="password-addon">
+                    <i class="fa fa-unlock-alt fa-fw"></i>
+                </span>
+                <input type="text" class="form-control" name="content" placeholder="Content" aria-describedby="password-addon" ng-model="task.content">
+            </div>
+        </div>
+    </div>
+
+    <div class="row voffset-15">
+        <div class="col-sm-offset-3 col-sm-3">
+            <button class="btn btn-primary btn-lg btn-block" ng-click="createTask(task, thisForm)">
+                <i class="fa fa-sign-in"></i> yes
+            </button>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-default btn-lg btn-block" ng-click="gotoMenu()">
+                <i class="fa fa-bn"></i> NO
+            </button>
+        </div>
+    </div>
+    
+</div>
+</form>

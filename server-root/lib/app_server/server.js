@@ -9,7 +9,11 @@ var _ = require('underscore');
 var logger = require('../runtime/logger').getLogger();
 var ResponseHelper = require('./helper/ResponseHelper');
 
-var servicesNames = ['user'];
+var servicesNames = [
+    'user',
+	'task',
+    'authorize'
+];
 var services = servicesNames.map(function(service) {
     return require('./app/' + service);
 });
@@ -27,7 +31,7 @@ module.exports = function(config, db) {
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+        res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Authorization');
         next();
     });
 
@@ -69,6 +73,7 @@ module.exports = function(config, db) {
 
     // Set route
     services.forEach(function(service) {
+        logger.info('service.' + service.rootPath + ' loading.....');
         var fullpath = '/' + config.server.context + '/';
         if (service.rootPath != null && service.rootPath.length > 0) {
             fullpath += service.rootPath;
@@ -96,9 +101,8 @@ module.exports = function(config, db) {
                 app.route(actionPath).delete(callback);
             }
         }
-
-        logger.info('APP Server Startup');
     });
+    logger.info('APP Server Startup');
 };
 
 var _errorHandleMiddleware = function(error, req, res, next) {
