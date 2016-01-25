@@ -16,16 +16,12 @@ var task = {
     actions: {}
 };
 
-
-
 task.actions.createTask = {
     path: 'createTask',
     method: 'post',
     execute: function(req, res) {
         var param = req.body;
         var name = param.name || '';
-
-
         if (name.length === 0) {
             ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
             return;
@@ -33,6 +29,22 @@ task.actions.createTask = {
 
         async.waterfall([function(callback) {
             var task = new Tasks({name: name});
+			var taskId = task._id;
+			var user = new Users({username: username});
+			var userId = user._id;
+            var rUserCreateTasks = new RUserCreateTasks({
+				targetRef: {type: taskId, ref:'tasks'}, initiatorRef: {type:userId, ref:'users'}});			
+            rUserCreateTasks.save(function(error, rUserCreateTasks) {
+                if (error) {
+                    callback(error);
+                } else {
+                    callback(null, rUserCreateTasks);
+                }
+            });
+
+			var s = rUserCreateTasks;
+			
+			
             task.save(function(error, task) {
                 if (error) {
                     callback(error);
@@ -41,7 +53,6 @@ task.actions.createTask = {
                 }
             });
         }, function(task, callback) {
-            var taskId = task._id;
             callback(null, task);			
         }], function(error, task) {
             ResponseHelper.buildResponse(res, error, task);

@@ -13,4 +13,4 @@ module.exports = mongoose.model('RUserCreateTasks', new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
+}));

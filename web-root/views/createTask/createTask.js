@@ -13,7 +13,7 @@
     }]);
 			
     // define controller
-    app.controller('LongController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
+    app.controller('createTaskController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
  /*      //$http的get方法与远程的一个文件发出请求，如果成功，则执行一个回调函数，函数的参数就是从远端文件里拿到的数据，这个数据可以是个数组，也可以是个对象。
         //那么我们这次拿到的是一个json数组，数组的元素是一个个的对象。
         $http.get('task/long').success(function (data) {
@@ -26,7 +26,6 @@
             $rootScope.allPage = data.length;
         });
 */
-
 		$scope.error = '';
 
         $scope.gotoMenu = function() {
@@ -39,7 +38,6 @@
             if (thisForm.$invalid) {
                 return;
             }
-
             $http.post(config.apiUrl + 'task/createTask', task).then(function(response) {
                 var data = response.data;
                 if (data.errorInfo != null) {
