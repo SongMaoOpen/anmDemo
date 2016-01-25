@@ -13,26 +13,26 @@
     }]);
 
     // define controller
-    app.controller('SignInController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
+    app.controller('SignInController', function($scope, $location, $http, config) {
         $scope.error;
 
         $scope.gotoMenu = function() {
             $location.path('/');
-            $location.replace();
         };
 
         $scope.signin = function(user, thisForm) {
-            $http.put(config.apiUrl + 'user/login', user).then(function(response) {
+            $http.post(config.apiUrl + 'authorize', user).then(function(response) {
                 var msg = response.data;
                 if (msg.errorInfo != null) {
                     $scope.error = msg.errorInfo.description;
                 } else {
-					$location.path('/task');
-					$location.replace();
-				}
+                    window.localStorage.setItem('token', msg.token);
+                    $location.path('/task').search({token:msg.token});
+                    $location.replace();
+                }
             }).catch(function(response) {
                 $scope.error = 'Server Error!';
             });
         };
-    }]);
+    });
 }());

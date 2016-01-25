@@ -13,7 +13,7 @@
     }]);
 			
     // define controller
-    app.controller('LongController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
+    app.controller('createTaskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
  /*      //$http的get方法与远程的一个文件发出请求，如果成功，则执行一个回调函数，函数的参数就是从远端文件里拿到的数据，这个数据可以是个数组，也可以是个对象。
         //那么我们这次拿到的是一个json数组，数组的元素是一个个的对象。
         $http.get('task/long').success(function (data) {
@@ -27,21 +27,29 @@
         });
 */
 
+	
+	
 		$scope.error = '';
 
         $scope.gotoMenu = function() {
-            $location.path('/');
+            $location.path('/task');
             //$location.replace();
         };
 
         $scope.createTask = function(task, thisForm) {
+			var url=document.location.href;
+			var a = url.lastIndexOf("=");
+			var token = url.substring(a+1,url.length);
+	
             thisForm.name.$setDirty();
             if (thisForm.$invalid) {
                 return;
             }
-
-            $http.post(config.apiUrl + 'task/createTask', task).then(function(response) {
+			
+			
+            $http.post(config.apiUrl + 'task/createTask', task, token).then(function(response) {
                 var data = response.data;
+				
                 if (data.errorInfo != null) {
                     // Server API Error.
                     $scope.error = data.errorInfo.description;

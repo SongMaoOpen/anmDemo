@@ -12,8 +12,10 @@
         });
     }]);
  // define controller
-    app.controller('taskController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
-     $http.get(config.apiUrl+'user/').success(function(data){
+    app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
+		$rootScope.location = $location;
+		alert($rootScope.location);
+	 $http.get(config.apiUrl+'user/').success(function(data){
 			$scope.list = data;		
 			
 			});
@@ -34,7 +36,7 @@
 
 
 		$scope.createTask = function(){
-			$location.path('/createTask');
+			$location.path('/createTask',$rootScope.location);
 			 $location.replace();
 		}
        
