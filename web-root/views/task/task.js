@@ -20,6 +20,7 @@
  
 	 $http.get(config.apiUrl+'user').success(function(data){
       	$scope.data=data;
+	 });
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
         $scope.pageSize = 10;
