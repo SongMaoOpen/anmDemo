@@ -15,7 +15,9 @@
     app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
 		$rootScope.location = $location;
 		
-	 $http.get(config.apiUrl+'user/').success(function(data){
+		//获取数据到分页
+
+	 $http.get(config.apiUrl+'user').success(function(data){
 			$scope.list = data;		
 			
 			});
@@ -24,7 +26,7 @@
 		$scope.delTask = function(index) {
             $scope.call.splice(index,1);
 			console.log($sope.list);
-
+		
             $http.post(config.apiUrl + 'user/delTask', {index:index}).success(function(data) {
                 $scope.list = data;
                 

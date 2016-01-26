@@ -18,7 +18,7 @@
 		for(var key in $location.search()){
 		token = $location.search()[key];
 		}
-		var obj = {};
+		var task = {};
 		$scope.error = '';
 			
 			
@@ -31,11 +31,11 @@
         $scope.createTask = function(task) {
 			
            
-		   obj.name = task.name;
-		   obj.token = token;
-			//if(task.token!==null && task.token === this.token+''){
+		   task.name = task.name;
+		   task.token = token;
+		  
 			
-            $http.post(config.apiUrl + 'task/createTask', obj).then(function(response) {
+            $http.post(config.apiUrl + 'task/createTask', task).then(function(response) {
                 var data = response.data;
 				
                 if (data.errorInfo != null) {
@@ -43,12 +43,11 @@
                     $scope.error = data.errorInfo.description;
                 }
             }, function(response) {
+				
                 //console.log(response);
                 $scope.error = 'Server Error!';
             });
-			//} else {
-			///	alert('this.token:'+this.token);
-			//}
+		
         };
     }]);
 }());
