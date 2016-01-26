@@ -1,7 +1,7 @@
 ﻿// import third party library
 var mongoose = require('mongoose');
 var async = require('async');
-
+var jwt = require('jsonwebtoken');
 // import model
 var Tasks = require('../../db_modules/models/tasks');
 var Users = require('../../db_modules/models/users');
@@ -21,19 +21,13 @@ task.actions.createTask = {
     method: 'post',
 	permissionValidators: ['validateLogin'],
     execute: function(req, res) {
-        var param = req.body;
-        var name = param.name || '';
-        if (name.length === 0) {
-            ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
-            return;
-        }
-
+		var name = req.body.name || '';
         async.waterfall([function(callback) {
             var task = new Tasks({name: name});
 			var taskId = task._id;
-			var userId = MongoHelper.parseObjectId(req.body.userId);
+			var _id = MongoHelper.parseObjectId(req.body.userId);
             var rUserCreateTasks = new RUserCreateTasks({
-				targetRef: {type: taskId, ref:'tasks'}, initiatorRef: {type:userId, ref:'users'}});			
+				targetRef: {type: taskId, ref:'tasks'}, initiatorRef: {type:_id, ref:'users'}});			
             rUserCreateTasks.save(function(error, rUserCreateTasks) {
                 if (error) {
                     callback(error);
