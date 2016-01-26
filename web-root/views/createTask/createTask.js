@@ -14,25 +14,28 @@
 			
     // define controller
     app.controller('createTaskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
+		var token;
+		for(var key in $location.search()){
+		token = $location.search()[key];
+		}
+		var obj = {};
 		$scope.error = '';
+			
+			
 
         $scope.gotoMenu = function() {
             $location.path('/task');
             //$location.replace();
         };
 
-        $scope.createTask = function(task, thisForm) {
-			var url=document.location.href;
-			var a = url.lastIndexOf("=");
-			var token = url.substring(a+1,url.length);
-	
-            thisForm.name.$setDirty();
-            if (thisForm.$invalid) {
-                return;
-            }
+        $scope.createTask = function(task) {
 			
+           
+		   obj.name = task.name;
+		   obj.token = token;
+			//if(task.token!==null && task.token === this.token+''){
 			
-            $http.post(config.apiUrl + 'task/createTask', task, token).then(function(response) {
+            $http.post(config.apiUrl + 'task/createTask', obj).then(function(response) {
                 var data = response.data;
 				
                 if (data.errorInfo != null) {
@@ -43,6 +46,9 @@
                 //console.log(response);
                 $scope.error = 'Server Error!';
             });
+			//} else {
+			///	alert('this.token:'+this.token);
+			//}
         };
     }]);
 }());

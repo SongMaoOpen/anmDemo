@@ -33,9 +33,10 @@
                 if (data.errorInfo != null) {
                     // Server API Error.
                     $scope.error = data.errorInfo.description;
+                } else {
+                    window.localStorage.setItem('token', data.token);
                 }
             }).catch(function(response) {
-                //console.log(response);
                 $scope.error = 'Server Error!';
             });
         };

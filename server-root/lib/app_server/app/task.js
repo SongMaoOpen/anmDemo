@@ -1,7 +1,7 @@
 ﻿// import third party library
 var mongoose = require('mongoose');
 var async = require('async');
-
+var jwt = require('jsonwebtoken');
 // import model
 var Tasks = require('../../db_modules/models/tasks');
 var Users = require('../../db_modules/models/users');
@@ -16,23 +16,29 @@ var task = {
     actions: {}
 };
 
-
-
 task.actions.createTask = {
     path: 'createTask',
     method: 'post',
+	permissionValidators: ['validateLogin'],
     execute: function(req, res) {
-        var param = req.body;
-        var name = param.name || '';
-
-
-        if (name.length === 0) {
-            ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
-            return;
-        }
-
+		var name = req.body.name || '';
         async.waterfall([function(callback) {
             var task = new Tasks({name: name});
+			var taskId = task._id;
+			var _id = MongoHelper.parseObjectId(req.body.userId);
+            var rUserCreateTasks = new RUserCreateTasks({
+				targetRef: {type: taskId, ref:'tasks'}, initiatorRef: {type:_id, ref:'users'}});			
+            rUserCreateTasks.save(function(error, rUserCreateTasks) {
+                if (error) {
+                    callback(error);
+                } else {
+                    callback(null, rUserCreateTasks);
+                }
+            });
+
+			var s = rUserCreateTasks;
+			
+			
             task.save(function(error, task) {
                 if (error) {
                     callback(error);
@@ -41,7 +47,6 @@ task.actions.createTask = {
                 }
             });
         }, function(task, callback) {
-            var taskId = task._id;
             callback(null, task);			
         }], function(error, task) {
             ResponseHelper.buildResponse(res, error, task);
@@ -49,7 +54,7 @@ task.actions.createTask = {
     }
 };
 
-task.actions.updataTask = {
+task.actions.updateTask = {
 	path: '',
     method: 'put',
 	execute: function(req, res) {
