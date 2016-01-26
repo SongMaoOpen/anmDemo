@@ -20,7 +20,7 @@
  
 	 $http.get(config.apiUrl+'user').success(function(data){
       	$scope.data=data;
-        $scope.currentPage = 1;
+       /* $scope.currentPage = 1;
         $scope.numPages = 5;
         $scope.pageSize = 10;
         $scope.pages = [];
@@ -43,7 +43,7 @@
 				
 				
 			});*/
-        
+     /*   
         $scope.onSelectPage = function (page) {
           
             $http.get('Customers_JSON.txt',
@@ -62,9 +62,9 @@
 				$scope.names = response.records;
 				$scope.numPages = Math.ceil($scope.names.length / $scope.pageSize);
 				});*/
-		 };
+		 //};
 
-		 myModule.directive('paging', function() {
+		/* myModule.directive('paging', function() {
 			return {
             restrict: 'E',
             //scope: {
@@ -113,7 +113,7 @@
 
             }
         };
-    });
+    });*/
 
 
 	//deleted
