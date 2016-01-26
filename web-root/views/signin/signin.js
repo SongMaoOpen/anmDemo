@@ -27,7 +27,7 @@
                     $scope.error = msg.errorInfo.description;
                 } else {
                     window.localStorage.setItem('token', msg.token);
-                    $location.path('/task').search({token:msg.token});
+                    $location.path('/task');
                     $location.replace();
                 }
             }).catch(function(response) {

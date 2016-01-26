@@ -8,18 +8,18 @@
 			<span class="glyphicon glyphicon-user"></span>新增		
 		</button>
 	<hr>
+	 <paging>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
 			<th>序号</th>
 				<th>TaskName</th>
 				<th>创建时间</th>
-				<th>结束时间</th>
 				<th>编辑</th>
 			</tr>
 		</thead>
 	
-			<tr ng-repeat="pages in list">
+			<tr ng-repeat="pages in data">
 			
 				<td>
 						<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 levl3 ">
@@ -45,29 +45,24 @@
 					</button>
 				</td>
 				</tr>
-				
-
-				   <tfoot>
-                    <td colspan="6">
-                        <div class="pagination pull-right">
-                            <ul>
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="prevPage()">« Prev</a>
-                                </li>
-                                <li ng-repeat="n in range(pagedItems.length)"
-                                    ng-class="{active: n == currentPage}"
-                                ng-click="setPage()">
-                                    <a href ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                    <a href ng-click="nextPage()">Next »</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tfoot>
 			</table>
-			
+		
+			 <ul class="pagination"
+                num-pages="tasks.pageCount"
+                current-page="tasks.currentPage"
+                on-select-page="selectPage(page)">
+                <li ng-class="{disabled: noPrevious()}">
+                    <a ng-click="selectPrevious()">&laquo;</a>
+                </li>
+                <li ng-repeat="page in pages"
+                    ng-class="{active: isActive(page)}">
+                    <a ng-click="selectPage(page)">{{page}}</a>
+                </li>
+                <li ng-class="{disabled: noNext()}">
+                    <a ng-click="selectNext()">&raquo;</a>
+                </li>
+            </ul>
+			 </paging>
 	   </div>
     </div>
 	<div class="row voffset-15">
