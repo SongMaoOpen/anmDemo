@@ -14,10 +14,8 @@
 			
     // define controller
     app.controller('createTaskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
-		var token;
-		for(var key in $location.search()){
-		token = $location.search()[key];
-		}
+		var token = window.localStorage.getItem('token');
+
 		var task = {};
 		$scope.error = '';
 			
@@ -35,7 +33,11 @@
 		   task.token = token;
 		  
 			
-            $http.post(config.apiUrl + 'task/createTask', task).then(function(response) {
+            $http.post(config.apiUrl + 'task/createTask', task, {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }).then(function(response) {
                 var data = response.data;
 				
                 if (data.errorInfo != null) {
