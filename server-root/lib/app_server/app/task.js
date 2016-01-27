@@ -10,7 +10,6 @@ var ResponseHelper = require('../helper/ResponseHelper');
 var MongoHelper = require('../helper/MongoHelper');
 var ServerError = require('../ServerError');
 var RUserCreateTasks = require('../../db_modules/models/rUserCreateTasks');
-var user = require('./user');
 var task = {
     rootPath: 'task',
     actions: {}
@@ -24,22 +23,7 @@ task.actions.createTask = {
 		var name = req.body.name || '';
         async.waterfall([function(callback) {
             var task = new Tasks({name: name});
-			var taskId = task._id;
-			var _id = MongoHelper.parseObjectId(req.body.userId);
-            var rUserCreateTasks = new RUserCreateTasks({
-				targetRef: {type: taskId, ref:'tasks'}, initiatorRef: {type:_id, ref:'users'}});			
-            rUserCreateTasks.save(function(error, rUserCreateTasks) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(null, rUserCreateTasks);
-                }
-            });
-
-			var s = rUserCreateTasks;
-			
-			
-            task.save(function(error, task) {
+			task.save(function(error, task) {
                 if (error) {
                     callback(error);
                 } else {
@@ -47,7 +31,17 @@ task.actions.createTask = {
                 }
             });
         }, function(task, callback) {
-            callback(null, task);			
+            var rUserCreateTasks = new RUserCreateTasks({
+                targetRef: task._id,
+                initiatorRef: MongoHelper.parseObjectId(req.body.userId)
+            });			
+            rUserCreateTasks.save(function(error, rUserCreateTasks) {
+                if (error) {
+                    callback(error);
+                } else {
+                    callback(null, task);
+                }
+            });
         }], function(error, task) {
             ResponseHelper.buildResponse(res, error, task);
         });
@@ -72,6 +66,20 @@ task.actions.updateTask = {
         });
 		
 	}
+};
+task.actions.show = {
+    path: 'show',
+    method: 'post',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        async.waterfall([function(callback) {
+                       
+        }, function(user, callback) {
+            var task = rUserCreateTasks.findOne({initiatorRef: MongoHelper.parseObjectId(req.body.userId)}).populate('targetRef');
+        }], function(error) {
+            ResponseHelper.buildResponse(res, error, task);
+        });
+    }
 };
 task.actions.getMe = {
     path: '',
