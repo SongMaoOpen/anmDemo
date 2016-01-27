@@ -11,7 +11,7 @@ var ResponseHelper = require('./helper/ResponseHelper');
 
 var servicesNames = [
     'user',
-	'task',
+    'task',
     'authorize'
 ];
 var services = servicesNames.map(function(service) {
@@ -109,6 +109,7 @@ var _errorHandleMiddleware = function(error, req, res, next) {
     if (!error) {
         next();
     } else {
+        logger.error(error);
         res.status(500);
         ResponseHelper.buildResponse(res, error);
     }
