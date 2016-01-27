@@ -19,25 +19,35 @@
 			</tr>
 		</thead>
 	
-			<tr ng-repeat="pages in data">
+			<tr ng-repeat="pages in page">
 			
 				<td>
 						<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 levl3 ">
-							{{pages.id}}
+							{{$index+1}}
 						</div>
 					</td>
 					<td>
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4  levl3">
-							<span class=""> &nbsp;</span><span>{{pages.username}}</span>
+							<span class=""> &nbsp;</span><span>{{pages._id}}</span>
 						</div>
 					</td>
 					<td>
 						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-							{{pages.password | uppercase}}
+							{{pages.name}}
+						</div>
+					</td>
+					<td>
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+							{{pages.create}}
+						</div>
+					</td>
+					<td>
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+							{{pages.deadline}}
 						</div>
 					</td>
 				<td width=200px>
-					<button class="btn btn-success btn-xs" ng-click="updateTask()">
+					<button class="btn btn-success btn-xs" ng-click="updateTask($index)">
 						<span class="glyphicon glyphicon-pencil"></span>修改
 					</button>
 					<button class="btn btn-danger btn-xs" ng-click="delTask($index)">

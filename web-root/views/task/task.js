@@ -13,14 +13,32 @@
     }]);
  // define controller
     app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
-		$rootScope.location = $location;
+		
 		
 		//获取数据到分页
+	var token = window.localStorage.getItem('token');
+	var task ={};
+	$scope._id;
+	$scope.name = '';
+	$scope.create = '';
+	$scope.deadline='';
+	/*$scope.page = [
+		{id:'01', username:'ldld', password:'mgelg'},
+		{id:'02', username:'2dld', password:'mgelg'},
+		{id:'03', username:'3dld', password:'mgelg'},
+		{id:'04', username:'4dld', password:'mgelg'},
 	
- 
-	 $http.get(config.apiUrl+'user').success(function(data){
-      	$scope.data=data;
+	];*/
+	task.token = token;
+	 $http.get(config.apiUrl+'user/show', task, {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }).success(function(data){
+      			$scope.page=data;
+				
 	 });
+
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
         $scope.pageSize = 10;
@@ -134,12 +152,13 @@
 		
 		$scope.createTask = function(){
 
-			$location.path('/createTask',$rootScope.location);
+			$location.path('/createTask');
 			 $location.replace();
 		}
        
-	   $scope.updateTask = function(){
-			$location.path('/updateTask');
+	    $scope.updateTask = function(index){
+			
+			$location.path('/updateTask').search({index:index});
 			 $location.replace();
 		}
 

@@ -12,11 +12,23 @@
         });
     }]);
  // define controller
-    app.controller('updateTaskController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
+    app.controller('updateTaskController', ['$rootScope','$scope', '$location', '$http', 'config', function($rootScope,$scope, $location, $http, config) {
         $scope.error;
-
-		$http.get(config.apiUrl+'user').success(function(data){
-			
+	
+		var taskId = $location. absUrl();
+		for(var key in taskId){
+			alert(taskId[key]);
+		}
+		alert(taskId);
+		$http.get(config.apiUrl+'updateTask').success(function(data){
+            $http.get(config.apiUrl + 'user', data.task_id).success(function(data) {
+                
+				$scope.list = data;
+                
+            }).error(function(data,status,headers,config){
+				alert('no data')
+			})
+       
 		});
 		 $scope.gotoMenu = function() {
             $location.path('/task');
