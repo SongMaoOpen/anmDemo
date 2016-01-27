@@ -1,5 +1,5 @@
 ﻿(function(){
-'use strict';
+	'use strict';
 
     // get ng-app
     var app = angular.module('anmApp.task',['ngRoute']);
@@ -11,34 +11,28 @@
             controller: 'taskController'
         });
     }]);
- // define controller
+	// define controller
     app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
-		
-		
-		//获取数据到分页
+
+	//获取数据到分页
 	var token = window.localStorage.getItem('token');
 	var task ={};
-	$scope._id;
-	$scope.name = '';
-	$scope.create = '';
-	$scope.deadline='';
-	/*$scope.page = [
-		{id:'01', username:'ldld', password:'mgelg'},
-		{id:'02', username:'2dld', password:'mgelg'},
-		{id:'03', username:'3dld', password:'mgelg'},
-		{id:'04', username:'4dld', password:'mgelg'},
+	var task_id;
+	$http.get(config.apiUrl + 'user', {
+		headers: {
+			Authorization: 'Bearer ' + token
+	}}).then(function(response){
+		$http.post(config.apiUrl + 'task/show',response.data).success(function(result){
+			console.log('result success:'+result.data);
+			$scope.page = result.data;	
+		});
+		console.log(response);
+//		$scope.page = response.data;
+	}).catch(function(response) {
+		console.log(response);
+	});
 	
-	];*/
-	task.token = token;
-	 $http.get(config.apiUrl+'user/show', task, {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            }).success(function(data){
-      			$scope.page=data;
-				
-	 });
-
+	
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
         $scope.pageSize = 10;
