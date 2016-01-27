@@ -70,12 +70,11 @@ task.actions.updateTask = {
 task.actions.show = {
     path: 'show',
     method: 'post',
-    permissionValidators: ['validateLogin'],
     execute: function(req, res) {
         async.waterfall([function(callback) {
                        
         }, function(user, callback) {
-            var task = rUserCreateTasks.findOne({initiatorRef: MongoHelper.parseObjectId(req.body.userId)}).populate('targetRef');
+            var task = rUserCreateTasks.findOne({'initiatorRef': req.body.userId}).populate('targetRef');
         }], function(error) {
             ResponseHelper.buildResponse(res, error, task);
         });
