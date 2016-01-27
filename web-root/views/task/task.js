@@ -17,13 +17,22 @@
 	//获取数据到分页
 	//var token = window.localStorage.getItem('token');
 	var user ={};
-	var user_id = $location.search().userId;
-	user.ut_id = user_id;
-	$http.post(config.apiUrl + 'task/show',user.ut_id).then(function(response){
-		console.log('result success:'+response.data);
-		
-		$scope.page = response.data;	
-	});
+	var token = window.localStorage.getItem('token');
+    $http.get(config.apiUrl + 'user', {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }}).then(function(response){
+            var user_id;
+            user_id = response.data._id;
+
+        $http.post(config.apiUrl + 'task/show', user_id).success(function(response){
+            console.log('result success:'+response.data);
+		    $scope.page = response.data;	
+        });
+    });
+
+
+	
 	
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
