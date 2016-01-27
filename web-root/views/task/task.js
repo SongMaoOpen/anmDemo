@@ -15,23 +15,15 @@
     app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
 
 	//获取数据到分页
-	var token = window.localStorage.getItem('token');
-	var task ={};
-	var task_id;
-	$http.get(config.apiUrl + 'user', {
-		headers: {
-			Authorization: 'Bearer ' + token
-	}}).then(function(response){
-		$http.post(config.apiUrl + 'task/show',response.data).success(function(result){
-			console.log('result success:'+result.data);
-			$scope.page = result.data;	
-		});
-		console.log(response);
-//		$scope.page = response.data;
-	}).catch(function(response) {
-		console.log(response);
+	//var token = window.localStorage.getItem('token');
+	var user ={};
+	var user_id = $location.search().userId;
+	user.ut_id = user_id;
+	$http.post(config.apiUrl + 'task/show',user.ut_id).then(function(response){
+		console.log('result success:'+response.data);
+		
+		$scope.page = response.data;	
 	});
-	
 	
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
