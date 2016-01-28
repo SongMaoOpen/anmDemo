@@ -22,10 +22,10 @@
 
         $scope.update = function(){
 		    var task = {
-                _id:taskId;
-                name:$scope.name;
-                create:$scope.create;
-                deadline:$scope.deadline;
+                _id:taskId,
+                name:$scope.name,
+                create:$scope.create,
+                deadline:$scope.deadline,
             };
             $http.post(config.apiUrl + 'task/updateTask', task).success(function(response) {
                 if (response.data == 'task') {

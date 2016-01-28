@@ -142,8 +142,8 @@
             //$scope.call.splice(index,1);
             
 			//console.log($sope.list);
-		    var _id = $scope.rsData[index]._id;
-            $http.post(config.apiUrl + 'task/delTask', {_id:_id}).success(function(response) {
+		    
+            $http.post(config.apiUrl + 'task/delTask', $scope.rsData[index]._id).success(function(response) {
                 if (response.data == 'task') {
                     $location.path('/task');
                     $location.replace();
