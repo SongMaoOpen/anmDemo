@@ -37,9 +37,14 @@
                 headers: {
                     Authorization: 'Bearer ' + token
                 }
-            }).then(function(response) {
-                var data = response.data;
-				
+            }).then(function(response) {    
+				if (response.data == 'task') {
+                    console.log('create success');
+                    $location.path('/task');
+                    $location.replace();
+                } else {
+                    console.log('create error');
+                }
                 if (data.errorInfo != null) {
                     // Server API Error.
                     $scope.error = data.errorInfo.description;

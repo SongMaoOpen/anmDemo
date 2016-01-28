@@ -13,25 +13,32 @@
     }]);
 	// define controller
     app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
-
+    var user_id;
 	//获取数据到分页
 	//var token = window.localStorage.getItem('token');
+    $scope.rsData = [
+        {_id:'56a72e3b7c7c22b40de11742',name:'asdasda',create:'2016-01-26T08:28:43.599Z',deadline:'2016-01-26T08:28:43.599Z'},
+        {_id:'56a739c87c7c22b40de11744',name:'asdsa',create:'2016-01-26T09:18:00.930Z',deadline:'2016-01-26T09:18:00.930Z'},
+        {_id:'56a739cd7c7c22b40de11746',name:'lidasi',create:'2016-01-26T09:18:05.384Z',deadline:'2016-01-26T09:18:05.384Z'},
+        {_id:'four',name:'xpx',create:'bmldl',deadline:'owowxmma'},
+        {_id:'five',name:'bmeme',create:'o',deadline:'owowxmma'}
+    ];
 	var user ={};
 	var token = window.localStorage.getItem('token');
-    $http.get(config.apiUrl + 'user', {
+  /*  $http.get(config.apiUrl + 'user', {
         headers: {
-          Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + token
         }}).then(function(response){
-            var user_id;
             user_id = response.data._id;
+            $http.post(config.apiUrl + 'task/show', user_id).then(function(response){
+                $scope.rsData = response.data;
+            });
+           
+    });*/
 
-        $http.post(config.apiUrl + 'task/show', user_id).success(function(response){
-            console.log('result success:'+response.data);
-		    $scope.page = response.data;	
-        });
-    });
-
-
+    
+       
+    
 	
 	
        /* $scope.currentPage = 1;
@@ -78,7 +85,7 @@
 				});*/
 		 //};
 
-		/* myModule.directive('paging', function() {
+		/* app.directive('paging', function() {
 			return {
             restrict: 'E',
             //scope: {
@@ -132,29 +139,36 @@
 
 	//deleted
 		$scope.delTask = function(index) {
-            $scope.call.splice(index,1);
-			console.log($sope.list);
-		
-            $http.post(config.apiUrl + 'user/delTask', {index:index}).success(function(data) {
-                $scope.list = data;
-                
+            //$scope.call.splice(index,1);
+            
+			//console.log($sope.list);
+		    var _id = $scope.rsData[index]._id;
+            $http.post(config.apiUrl + 'task/delTask', {_id:_id}).success(function(response) {
+                if (response.data == 'task') {
+                    $location.path('/task');
+                    $location.replace();
+                } else {
+                    console.log('del error');
+                }
             }).error(function(data,status,headers,config){
-				alert('no data')
+				console.log('no data');
 			})
         };
 	
 		
 		
 		$scope.createTask = function(){
-
 			$location.path('/createTask');
-			 $location.replace();
+            $location.replace();
 		}
        
 	    $scope.updateTask = function(index){
-			
-			$location.path('/updateTask').search({index:index});
-			 $location.replace();
+			var _id = $scope.rsData[index]._id;
+            var name = $scope.rsData[index].name;
+            var create = $scope.rsData[index].create;
+            var deadline = $scope.rsData[index].deadline
+			$location.path('/updateTask').search({_id:_id,name:name,create:create,deadline:deadline});
+            $location.replace();
 		}
 
 		$scope.signOut = function(){
