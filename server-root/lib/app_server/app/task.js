@@ -49,11 +49,67 @@ task.actions.createTask = {
 };
 
 task.actions.updateTask = {
-	path: '',
+	path: 'updateTask',
     method: 'put',
 	execute: function(req, res) {
-		var _id = MongoHelper.parseObjectId(req.session.taskId);
-		Tasks.findOne({
+        var name = req.body.name || '';
+        var create = req.body.create || '';
+        var deadline = req.body.deadline || '';
+        if (name.length === 0 || create.length === 0 || deadline.length === 0) {
+            ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
+            return;
+        }
+        async.waterfall([function(callback) {
+            Tasks.findOne({
+                _id: req.body._id
+            }, function(error, task) {
+                if (error) {
+                    callback(error);
+                } else if (task) {
+                    callback(ServerError.ERR_TASK_IS_NOT_EXISTS);
+                } else {
+                    callback(null, task);
+                }
+            });
+        }, function(task, callback) {
+            task.save(function(error, task) {
+                callback(error, task);
+            });
+        }], function(error, task) {
+            ResponseHelper.buildResponse(res, error, task);
+        });
+    }
+};
+
+task.actions.remove = {
+    path: 'remove',
+    method: 'delete',
+    execute: function (req, res) {
+        var taskId = req.body.taskId;
+        Tasks.remove({_id: taskId},function(error, task){
+            ResponseHelper.buildResponse(res, error, task);
+        });
+    }
+};
+
+task.actions.show = {
+    path: 'show',
+    method: 'post',
+    execute: function(req, res) {
+        var _id = req.body._id;
+            RUserCreateTasks.findOne({'initiatorRef': _id}).populate('targetRef').exec(function(err,task){
+               ResponseHelper.buildResponse(res, null, task);
+           });
+        
+    }
+};
+
+task.actions.request = {
+    path: 'request',
+    method: 'get',
+    execute: function(req, res) {
+        var _id = req.body.taskId;
+        Tasks.findOne({
             _id: _id
         }, function(error, task) {
             if (error) {
@@ -64,34 +120,20 @@ task.actions.updateTask = {
                 ResponseHelper.buildResponse(res, null, task);
             }
         });
-		
-	}
-};
-task.actions.show = {
-    path: 'show',
-    method: 'post',
-    execute: function(req, res) {
-        async.waterfall([function(callback) {
-                       
-        }, function(user, callback) {
-            var task = rUserCreateTasks.findOne({'initiatorRef': req.body.userId}).populate('targetRef');
-        }], function(error) {
-            ResponseHelper.buildResponse(res, error, task);
-        });
     }
 };
+
 task.actions.getMe = {
     path: '',
     method: 'get',
-    permissionValidators: ['validateLogin'],
     execute: function(req, res) {
-        var _id = MongoHelper.parseObjectId(req.session.taskId);
-        Users.findOne({
+        var _id = req.body.taskId;
+        Tasks.findOne({
             _id: _id
         }, function(error, task) {
             if (error) {
                 ResponseHelper.buildResponse(res, error);
-            } else if (!user) {
+            } else if (!task) {
                 ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
             } else {
                 ResponseHelper.buildResponse(res, null, task);
