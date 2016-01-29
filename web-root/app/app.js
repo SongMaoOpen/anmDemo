@@ -5,10 +5,11 @@
             'anmApp.main',
             'anmApp.signup',
             'anmApp.signin',
-			'anmApp.task',
-			'anmApp.updateTask',
-			'anmApp.createTask',
-			'anmApp.turnPage'
+            'anmApp.task',
+            'anmApp.updateTask',
+            'anmApp.createTask',
+            'anmApp.turnPage',
+            'userServices'
     ]);
 
     // set router
