@@ -86,7 +86,7 @@ task.actions.remove = {
     method: 'delete',
     execute: function (req, res) {
         var taskId = req.body.taskId;
-        Tasks.remove({_id: taskId},function(error, task){
+        Tasks.remove({_id: taskId},function(err, task){
             ResponseHelper.buildResponse(res, error, task);
         });
     }
@@ -97,8 +97,8 @@ task.actions.show = {
     method: 'post',
     execute: function(req, res) {
         var _id = req.body._id;
-            RUserCreateTasks.findOne({'initiatorRef': _id}).populate('targetRef').exec(function(err,task){
-               ResponseHelper.buildResponse(res, null, task);
+            RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(err,task){
+               ResponseHelper.buildResponse(res, error, task);
            });
         
     }
