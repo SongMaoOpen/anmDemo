@@ -29,7 +29,7 @@
                     window.localStorage.setItem('token', msg.token);
                     $location.path('/task');
                     $location.replace();
-                }
+				}
             }).catch(function(response) {
                 $scope.error = 'Server Error!';
             });

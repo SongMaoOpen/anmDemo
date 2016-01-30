@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-sm-offset-3 col-sm-6">
             <div class="page-header">
-                <h1>createTask</h1>
+                <h1>updateTask</h1>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
                 <span class="input-group-addon" id="username-addon">
                     <i class="fa fa-user fa-fw"></i>
                 </span>
-                <input type="text" class="form-control" name="name" placeholder="name" aria-describedby="Username-addon" ng-model="task.name">
+                <input type="text" class="form-control" name="name" value="{{name}}" aria-describedby="Username-addon" ng-model="name">
             </div>
         </div>
     </div>
@@ -33,16 +33,27 @@
         <div class="col-sm-offset-3 col-sm-6">
             <div class="input-group input-group-lg">
                 <span class="input-group-addon" id="password-addon">
-                    <i class="fa fa-unlock-alt fa-fw"></i>
+                    <span class="glyphicon glyphicon-time"></span>
                 </span>
-                <input type="text" class="form-control" name="content" placeholder="Content" aria-describedby="password-addon" ng-model="task.content">
+                <input type="text" class="form-control" name="content" value="{{create}}" aria-describedby="password-addon" ng-model="create">
+            </div>
+        </div>
+    </div>
+
+	 <div class="row voffset-15">
+        <div class="col-sm-offset-3 col-sm-6">
+            <div class="input-group input-group-lg" >
+                <span class="input-group-addon" id="password-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </span>
+                <input type="text" class="form-control" name="content" value="{{deadline}}" aria-describedby="password-addon" ng-model="deadline">
             </div>
         </div>
     </div>
 
     <div class="row voffset-15">
         <div class="col-sm-offset-3 col-sm-3">
-            <button class="btn btn-primary btn-lg btn-block" ng-click="createTask(task, thisForm)">
+            <button class="btn btn-primary btn-lg btn-block" ng-click="update()">
                 <i class="fa fa-sign-in"></i> yes
             </button>
         </div>

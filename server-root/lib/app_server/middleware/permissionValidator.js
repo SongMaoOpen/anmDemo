@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 // import helper
 var ServerError = require('../ServerError');
 var MongoHelper = require('../helper/MongoHelper');
+var logger = require('../../runtime/logger').getLogger();
 
 // db models
 var Users = require('../../db_modules/models/users');
@@ -30,8 +31,9 @@ var _init = function(services) {
                 actionPath += '/' + action.path;
             }
 
+            var method = action.method.toUpperCase();
             if (validators) {
-                _validatorsMap[actionPath] = validators;
+                _validatorsMap[method + ':' + actionPath] = validators;
             }
         }
     });
@@ -39,8 +41,12 @@ var _init = function(services) {
 };
 
 var _validate = function(req, res, next) {
-    var validators = _validatorsMap[req.path];
+    var method = req.method.toUpperCase();
+    var findKey = method + ':' + req.path;
+    logger.debug('lookup validate for [' + findKey + ']');
+    var validators = _validatorsMap[method + ':' + req.path];
     if (validators) {
+        logger.debug('lookup validate for [' + findKey + ']', 'result:', validators.length, ' validators will be executed');
         var tasks = [];
         validators.forEach(function(validator) {
             tasks.push(function(callback) {
@@ -58,6 +64,7 @@ var _validate = function(req, res, next) {
             }
         });
     } else {
+        logger.debug('lookup validate for [' + findKey + ']', 'result: none validate will be executed.');
         next();
     }
 };

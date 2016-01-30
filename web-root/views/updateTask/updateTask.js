@@ -12,8 +12,35 @@
         });
     }]);
  // define controller
-    app.controller('updateTaskController', ['$scope', '$location', '$http', 'config', function($scope, $location, $http, config) {
+    app.controller('updateTaskController', ['$rootScope','$scope', '$location', '$http', 'config', function($rootScope,$scope, $location, $http, config) {
         $scope.error;
+	
+		var taskId = $location.search()._id;
+        $scope.name = $location.search().name;
+        $scope.create = $location.search().create;
+        $scope.deadline = $location.search().deadline;
+
+        $scope.update = function(){
+		    var task = {
+                _id:taskId,
+                name:$scope.name,
+                create:$scope.create,
+                deadline:$scope.deadline,
+            };
+            $http.post(config.apiUrl + 'task/updateTask', task).success(function(response) {
+                if (response.data == 'task') {
+                    console.log('update success');
+                    $location.path('/task');
+                    $location.replace();
+                } else {
+                    console.log('update error');
+                }
+                
+            }).error(function(data,status,headers,config){
+				alert('no data')
+			})
+       
+        }
 		 $scope.gotoMenu = function() {
             $location.path('/task');
             $location.replace();
