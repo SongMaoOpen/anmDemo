@@ -59,8 +59,9 @@ task.actions.updateTask = {
         if (name.length === 0 || create.length === 0 || deadline.length === 0) {
             ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
             return;
-        }            
-            Tasks.findOne({
+        } 
+        
+        Tasks.findOne({
             _id: _id
         }, function(error, task) {
             if (error) {
@@ -68,13 +69,16 @@ task.actions.updateTask = {
             } else if (!task) {
                 ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
             } else {
-                ResponseHelper.buildResponse(res, null, task);
+                task.name = name;
+                task.deadline = deadline;
+                task.save(function(error, task) {
+                    if (error) {
+                        ResponseHelper.buildResponse(res, error);
+                    } else {
+                        ResponseHelper.buildResponse(res, null, task);
+                    }
+                })
             }
-        });
-        var _id = req.body._id;
-        Tasks.update({_id: _id, name: name, create: create, deadline: deadline}).exec(function(error, task) {
-            console.log(task);
-            ResponseHelper.buildResponse(res, error, task);
         });
     }
 };
@@ -97,10 +101,12 @@ task.actions.show = {
         var _id = req.body._id;
         RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task){
             var tasks = {};
+            var conut = 0;
             for(var i = 0; i < task.length; i++){
                 if (task[i].targetRef != null) {
+                    conut++;
                     console.log(task[i]);
-                    tasks[i] = task[i];
+                    tasks[i] = task[i].targetRef;
                 }
             } 
             ResponseHelper.buildResponse(res, error, tasks);
