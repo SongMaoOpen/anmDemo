@@ -8,8 +8,7 @@
             'anmApp.task',
             'anmApp.updateTask',
             'anmApp.createTask',
-            'anmApp.turnPage',
-            'userServices'
+            'anmApp.turnPage'
     ]);
 
     // set router
