@@ -150,8 +150,11 @@
             //$scope.call.splice(index,1);
             
 			//console.log($sope.list);
-		    
-            $http.post(config.apiUrl + 'task/delTask', $scope.rsData[index]._id).success(function(response) {
+		    var removeId = {
+                _id:$location.search()._id,
+            };
+            
+            $http.post(config.apiUrl + 'task/remove', removeId).success(function(response) {
                 if (response.data == 'task') {
                     $location.path('/task');
                     $location.replace();
