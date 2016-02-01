@@ -50,32 +50,30 @@ task.actions.createTask = {
 
 task.actions.updateTask = {
 	path: 'updateTask',
-    method: 'put',
+    method: 'post',
 	execute: function(req, res) {
+        var _id = req.body._id;
         var name = req.body.name || '';
         var create = req.body.create || '';
         var deadline = req.body.deadline || '';
         if (name.length === 0 || create.length === 0 || deadline.length === 0) {
             ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
             return;
-        }
-        async.waterfall([function(callback) {
+        }            
             Tasks.findOne({
-                _id: req.body._id
-            }, function(error, task) {
-                if (error) {
-                    callback(error);
-                } else if (task) {
-                    callback(ServerError.ERR_TASK_IS_NOT_EXISTS);
-                } else {
-                    callback(null, task);
-                }
-            });
-        }, function(task, callback) {
-            task.save(function(error, task) {
-                callback(error, task);
-            });
-        }], function(error, task) {
+            _id: _id
+        }, function(error, task) {
+            if (error) {
+                ResponseHelper.buildResponse(res, error);
+            } else if (!task) {
+                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+            } else {
+                ResponseHelper.buildResponse(res, null, task);
+            }
+        });
+        var _id = req.body._id;
+        Tasks.update({_id: _id, name: name, create: create, deadline: deadline}).exec(function(error, task) {
+            console.log(task);
             ResponseHelper.buildResponse(res, error, task);
         });
     }
@@ -83,10 +81,10 @@ task.actions.updateTask = {
 
 task.actions.remove = {
     path: 'remove',
-    method: 'delete',
+    method: 'post',
     execute: function (req, res) {
-        var taskId = req.body.taskId;
-        Tasks.remove({_id: taskId},function(err, task){
+        var taskId = req.body._id;
+        Tasks.remove({_id: taskId}).exec(function(error, task){
             ResponseHelper.buildResponse(res, error, task);
         });
     }
@@ -97,18 +95,24 @@ task.actions.show = {
     method: 'post',
     execute: function(req, res) {
         var _id = req.body._id;
-            RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(err,task){
-               ResponseHelper.buildResponse(res, error, task);
-           });
-        
+        RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task){
+            var tasks = {};
+            for(var i = 0; i < task.length; i++){
+                if (task[i].targetRef != null) {
+                    console.log(task[i]);
+                    tasks[i] = task[i];
+                }
+            } 
+            ResponseHelper.buildResponse(res, error, tasks);
+        });     
     }
 };
 
 task.actions.request = {
     path: 'request',
-    method: 'get',
+    method: 'post',
     execute: function(req, res) {
-        var _id = req.body.taskId;
+        var _id = req.body._id;
         Tasks.findOne({
             _id: _id
         }, function(error, task) {
