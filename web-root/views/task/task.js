@@ -33,14 +33,9 @@
         }}).then(function(response){
             
             $http.post(config.apiUrl + 'task/show', response.data).then(function(res){
-                obj = res.data;
-                
-                for(var i=0; i<obj.length; i++){
-                    objs.push(obj[i].targetRef);
-                }
-               // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
+                $scope.rsData = res.data;       
             });
-            $scope.rsData = objs;
+            
            
     });
 
@@ -151,7 +146,7 @@
             
 			//console.log($sope.list);
 		    var removeId = {
-                _id:$location.search()._id,
+                _id:$scope.rsData[index+1]._id,
             };
             
             $http.post(config.apiUrl + 'task/remove', removeId).success(function(response) {
@@ -173,8 +168,8 @@
             $location.replace();
 		}
        
-	    $scope.updateTask = function(index){
-            var _id = $scope.rsData[index]._id;
+	    $scope.updateTask = function(index){  
+            var _id = $scope.rsData[index+1]._id;
             // var name = $scope.rsData[index].name;
             // var create = $scope.rsData[index].create;
             // var deadline = $scope.rsData[index].deadline

@@ -33,7 +33,7 @@
 
         $scope.update = function(){
 		    var task = {
-                _id:taskId,
+                _id:$location.search()._id,
                 name:$scope.name,
                 create:$scope.create,
                 deadline:$scope.deadline,
