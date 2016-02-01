@@ -105,15 +105,12 @@ task.actions.show = {
         var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
         RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task){
             var tasks = {};
-            var conut = 0;
             for(var i = 0; i < task.length; i++){
                 if (task[i].targetRef != null) {
-                    conut++;
                     console.log(task[i]);
-                    tasks = task[i];
+                    tasks[i] = task[i].targetRef;
                 }
             }
-            tasks.conut = conut;
             ResponseHelper.buildResponse(res, error, tasks);
             console.log(tasks);
         });     
