@@ -88,6 +88,7 @@ task.actions.remove = {
     method: 'post',
     execute: function (req, res) {
         var taskId = req.body._id;
+        var task = 'success';
         Tasks.remove({_id: taskId}).exec(function(error, task){
             ResponseHelper.buildResponse(res, error, task);
         });
@@ -99,6 +100,9 @@ task.actions.show = {
     method: 'post',
     execute: function(req, res) {
         var _id = req.body._id;
+        var pageNumber = req.body.num||1;
+        var resultsPerPage = 5;
+        var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
         RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task){
             var tasks = {};
             var conut = 0;
@@ -106,10 +110,12 @@ task.actions.show = {
                 if (task[i].targetRef != null) {
                     conut++;
                     console.log(task[i]);
-                    tasks[i] = task[i].targetRef;
+                    tasks = task[i];
                 }
-            } 
+            }
+            tasks.conut = conut;
             ResponseHelper.buildResponse(res, error, tasks);
+            console.log(tasks);
         });     
     }
 };
