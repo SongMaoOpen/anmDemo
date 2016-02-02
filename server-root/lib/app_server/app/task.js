@@ -34,7 +34,7 @@ task.actions.createTask = {
             var rUserCreateTasks = new RUserCreateTasks({
                 targetRef: task._id,
                 initiatorRef: MongoHelper.parseObjectId(req.body.userId)
-            });			
+            });
             rUserCreateTasks.save(function(error, rUserCreateTasks) {
                 if (error) {
                     callback(error);
@@ -59,8 +59,7 @@ task.actions.updateTask = {
         if (name.length === 0 || create.length === 0 || deadline.length === 0) {
             ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
             return;
-        } 
-        
+        }
         Tasks.findOne({
             _id: _id
         }, function(error, task) {
@@ -103,17 +102,25 @@ task.actions.show = {
         var pageNumber = req.body.num||1;
         var resultsPerPage = 5;
         var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
+        var limit = skipFrom + resultsPerPage;
         RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task){
             var tasks = {};
+            var j = 0;
             for(var i = 0; i < task.length; i++){
                 if (task[i].targetRef != null) {
-                    console.log(task[i]);
-                    tasks[i] = task[i].targetRef;
+                    tasks[j] = task[i].targetRef;
+                    j++;
                 }
             }
-            ResponseHelper.buildResponse(res, error, tasks);
-            console.log(tasks);
-        });     
+            var y = 0;
+            var taskShow = {}
+            for (var x = skipFrom; x < limit ; x++) {
+                taskShow[y] = tasks[x];
+                y++;
+            }
+            taskShow.cunot = j;
+            ResponseHelper.buildResponse(res, error, taskShow);
+        });
     }
 };
 
