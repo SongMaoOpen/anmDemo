@@ -25,20 +25,35 @@
     ];*/
 	var user ={};
 	var obj;
-    var objs =[];
+    
     var token = window.localStorage.getItem('token');
     $http.get(config.apiUrl + 'user', {
         headers: {
             Authorization: 'Bearer ' + token
         }}).then(function(response){
             
+            $scope.currentPage = 1;
+            $scope.numPages = 5;
+            $scope.pageSize = 5;
+            $scope.pages = [];
+
             $http.post(config.apiUrl + 'task/show', response.data).then(function(res){
-                $scope.rsData = res.data;       
+                    $scope.rsData = res.data[1]; 
+                    var sum = res.data[0];
+                    
+                    var count = parseInt(sum/$scope.numPages);
+                    if(count < sum/$scope.numPages){
+                        count += 1;
+                        for(var i = 1; i<=count; i++){
+                            $scope.pages.push(i);
+                        }
+                    }
+               // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
             });
             
            
     });
-
+       
     
        
     
@@ -47,9 +62,9 @@
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
         $scope.pageSize = 10;
-        $scope.pages = [];
+        $scope.pages = [];*/
        //获得第一页
-        $http.get(config.'Customers_JSON.txt',
+    /*    $http.get(config.'Customers_JSON.txt',
             {
                method: 'GET',
                params: {
@@ -60,7 +75,7 @@
              }).then(function (result) {
                     $scope.data = result.data.Data;
                     $scope.numPages = Math.ceil(result.data.Total / result.data.PageSize);
-                });
+                });*/
         /*.success(function(response){
 				$scope.names = response.records;
 				$scope.numPages = Math.ceil($scope.names.length / $scope.pageSize);
@@ -143,14 +158,15 @@
 	//deleted
 		$scope.delTask = function(index) {
             //$scope.call.splice(index,1);
-            
+            alert($scope.rsData[index]._id)
 			//console.log($sope.list);
-		    var removeId = {
-                _id:$scope.rsData[index+1]._id,
-            };
-            
-            $http.post(config.apiUrl + 'task/remove', removeId).success(function(response) {
-                if (response.data == 'task') {
+		    var taskId = {
+                _id:$scope.rsData[index]._id
+            }
+
+            $http.post(config.apiUrl + 'task/remove', taskId).success(function(response) {
+                alert(response.data)
+                if (response.data) {
                     $location.path('/task');
                     $location.replace();
                 } else {
@@ -168,8 +184,8 @@
             $location.replace();
 		}
        
-	    $scope.updateTask = function(index){  
-            var _id = $scope.rsData[index+1]._id;
+	    $scope.updateTask = function(index){
+            var _id = $scope.rsData[index]._id;
             // var name = $scope.rsData[index].name;
             // var create = $scope.rsData[index].create;
             // var deadline = $scope.rsData[index].deadline

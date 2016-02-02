@@ -38,7 +38,7 @@
                     Authorization: 'Bearer ' + token
                 }
             }).then(function(response) {    
-				if (response.data == 'task') {
+				if (response.data != null) {
                     console.log('create success');
                     $location.path('/task');
                     $location.replace();

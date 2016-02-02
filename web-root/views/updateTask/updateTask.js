@@ -39,8 +39,8 @@
                 deadline:$scope.deadline,
             };
             $http.post(config.apiUrl + 'task/updateTask', task).then(function(response) {
-                if (response.data == 'task') {
-                    console.log('update success');
+                if (response.data != null) {
+                    console.log('update success');s
                     $location.path('/task');
                     $location.replace();
                 } else {
