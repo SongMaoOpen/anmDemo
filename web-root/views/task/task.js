@@ -25,7 +25,8 @@
     ];*/
 	var user ={};
 	var obj;
-    
+    var currentPage = 1;
+    var max;
     var token = window.localStorage.getItem('token');
     $http.get(config.apiUrl + 'user', {
         headers: {
@@ -36,11 +37,215 @@
             $scope.numPages = 5;
             $scope.pageSize = 5;
             $scope.pages = [];
-
-            $http.post(config.apiUrl + 'task/show', response.data).then(function(res){
-                    $scope.rsData = res.data[1]; 
-                    var sum = res.data[0];
+            
+            var taskId = response.data;
+            taskId.num = currentPage;
+                
+            $http.post(config.apiUrl + 'task/show', taskId).then(function(res){
+                   // $scope.rsData = res.data[0]; 
+                var index=[];
+                var sumArr = 1;
+                var sum =0;
+                for(var key in res.data[0]){
+                    var obj = res.data[0][key];
+                    for(var key1 in obj){
+                        if (obj.count != sum) {
+                            obj.count = sumArr*currentPage;
+                            index.push(obj);
+                            sum += 1;
+                        } else {
+                            continue;
+                        }
+                            
+                    }
+                    sumArr +=1;
+                }
+                $scope.rsData = index;
+                sum = res.data[1];
+                   
+                var count = parseInt(sum/$scope.numPages);
+                if(count < sum/$scope.numPages){
+                    count += 1;
+                    max = count;
+                    for(var i = 1; i<=count; i++){
+                        $scope.pages.push(i);
+                    }
+                }
+                var correntPage = 1;
+                
+               // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
+            });
+            
+           
+    });
+       
+   
+       
+    $scope.selectNext = function(){
+        
+        if(currentPage < max){
+            
+            currentPage += 1;
+            $http.get(config.apiUrl + 'user', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }}).then(function(response){
+                
+                $scope.currentPage = 1;
+                $scope.numPages = 5;
+                $scope.pageSize = 5;
+                $scope.pages = [];
+                
+                var taskId = response.data;
+                taskId.num = currentPage;
                     
+                $http.post(config.apiUrl + 'task/show', taskId).then(function(res){
+                       // $scope.rsData = res.data[0]; 
+                    if (res.data != null) {
+                        var index=[];
+                        var sumArr=currentPage*5-4;  
+                        var sum = currentPage*5-5;
+                        for(var key in res.data[0]){
+                            
+                            var obj = res.data[0][key];
+                            for(var key1 in obj){
+                                
+                                if (obj.count != sum) {
+                                    
+                                    obj.count = sumArr;
+                                    index.push(obj);
+                                    sum += 1;
+                                } else {
+                                    continue;
+                                }
+                                    
+                            }
+                            sumArr +=1;
+                        }
+                        $scope.rsData = index;
+                        var sum = res.data[1];
+                           
+                        var count = parseInt(sum/$scope.numPages);
+                        if(count < sum/$scope.numPages){
+                            count += 1;
+                            for(var i = 1; i<=count; i++){
+                                $scope.pages.push(i);
+                            }
+                        }
+                        var correntPage = 1;
+                    } else {
+                        alert('null');
+                    }
+                   // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
+                });   
+            });
+        }
+    }
+	
+    $scope.selectPrevious = function(){
+        if(currentPage > 1){
+            currentPage -= 1;
+            $http.get(config.apiUrl + 'user', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }}).then(function(response){
+                
+                $scope.currentPage = 1;
+                $scope.numPages = 5;
+                $scope.pageSize = 5;
+                $scope.pages = [];
+                
+                var taskId = response.data;
+                taskId.num = currentPage;
+                    
+                $http.post(config.apiUrl + 'task/show', taskId).then(function(res){
+                       // $scope.rsData = res.data[0]; 
+                    if (res.data != null) {
+                        var index=[];
+                        var sumArr=currentPage*5-4;
+                        var sum = currentPage*5-5;
+                        for(var key in res.data[0]){
+                            
+                            var obj = res.data[0][key];
+                            for(var key1 in obj){
+                                
+                                if (obj.count != sum) {
+                                    
+                                    obj.count = sumArr;
+                                    index.push(obj);
+                                    sum += 1;
+                                } else {
+                                    continue;
+                                }
+                                    
+                            }
+                            sumArr +=1;
+                        }
+                        $scope.rsData = index;
+                        var sum = res.data[1];
+                           
+                        var count = parseInt(sum/$scope.numPages);
+                        if(count < sum/$scope.numPages){
+                            count += 1;
+                            for(var i = 1; i<=count; i++){
+                                $scope.pages.push(i);
+                            }
+                        }
+                        var correntPage = 1;
+                    } else {
+                        console.log('null');
+                    }
+                   // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
+                });   
+            });
+        } else {
+            alert('页码不足');
+        }
+	} 
+    
+
+    $scope.selectPage = function(page) {
+        currentPage = page;
+        $http.get(config.apiUrl + 'user', {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }}).then(function(response){
+            
+            $scope.currentPage = 1;
+            $scope.numPages = 5;
+            $scope.pageSize = 5;
+            $scope.pages = [];
+            
+            var taskId = response.data;
+            taskId.num = currentPage;
+                
+            $http.post(config.apiUrl + 'task/show', taskId).then(function(res){
+                   // $scope.rsData = res.data[0]; 
+                if (res.data != null) {
+                    var index=[];
+                    var sumArr=currentPage*5-4;
+                    
+                    var sum = currentPage*5-5;
+                    for(var key in res.data[0]){
+                        
+                        var obj = res.data[0][key];
+                        for(var key1 in obj){
+                            
+                            if (obj.count != sum) {
+                                
+                                obj.count = sumArr;
+                                index.push(obj);
+                                sum += 1;
+                            } else {
+                                continue;
+                            }
+                                
+                        }
+                        sumArr +=1;
+                    }
+                    $scope.rsData = index;
+                    var sum = res.data[1];
+                       
                     var count = parseInt(sum/$scope.numPages);
                     if(count < sum/$scope.numPages){
                         count += 1;
@@ -48,17 +253,14 @@
                             $scope.pages.push(i);
                         }
                     }
+                    var correntPage = 1;
+                } else {
+                    alert('null');
+                }
                // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
-            });
-            
-           
-    });
-       
-    
-       
-    
-	
-	
+            });   
+        });
+    }
        /* $scope.currentPage = 1;
         $scope.numPages = 5;
         $scope.pageSize = 10;
@@ -66,22 +268,22 @@
        //获得第一页
     /*    $http.get(config.'Customers_JSON.txt',
             {
-               method: 'GET',
-               params: {
-               'pageNo': $scope.currentPage,
-               'pageSize': $scope.pageSize
-						},
-               responseType: "json"
+                method: 'GET',
+                params: {
+                    'pageNo': $scope.currentPage,
+                    'pageSize': $scope.pageSize
+                },
+                responseType: "json"
              }).then(function (result) {
                     $scope.data = result.data.Data;
                     $scope.numPages = Math.ceil(result.data.Total / result.data.PageSize);
                 });*/
-        /*.success(function(response){
+            /*.success(function(response){
 				$scope.names = response.records;
 				$scope.numPages = Math.ceil($scope.names.length / $scope.pageSize);
 				
 				
-			});*/
+            });*/
      /*   
         $scope.onSelectPage = function (page) {
           
@@ -156,12 +358,9 @@
 
 
 	//deleted
-		$scope.delTask = function(index) {
-            //$scope.call.splice(index,1);
-            alert($scope.rsData[index]._id)
-			//console.log($sope.list);
+		$scope.delTask = function(id) {
 		    var taskId = {
-                _id:$scope.rsData[index]._id
+                _id:id
             }
 
             $http.post(config.apiUrl + 'task/remove', taskId).success(function(response) {
@@ -184,8 +383,8 @@
             $location.replace();
 		}
        
-	    $scope.updateTask = function(index){
-            var _id = $scope.rsData[index]._id;
+	    $scope.updateTask = function(id){
+            var _id = id;
             // var name = $scope.rsData[index].name;
             // var create = $scope.rsData[index].create;
             // var deadline = $scope.rsData[index].deadline
