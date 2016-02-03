@@ -116,13 +116,14 @@ task.actions.show = {
             var taskShow = [];
             var taskSh = {};
             for (var x = skipFrom; x < limit ; x++) {
-                taskSh[y] = tasks[x];
-                y++;
+                taskSh[skipFrom] = tasks[x];
+                skipFrom++;
             }
-            var count = j; 
-            taskShow[0] = count;
-            taskShow[1] = taskSh;
+            var count = j;
+            taskShow[0] = taskSh;
+            taskShow[1] = count;
             ResponseHelper.buildResponse(res, error, taskShow);
+            console.log(taskShow);
         });
     }
 };
