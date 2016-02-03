@@ -113,12 +113,15 @@ task.actions.show = {
                 }
             }
             var y = 0;
-            var taskShow = {}
+            var taskShow = [];
+            var taskSh = {};
             for (var x = skipFrom; x < limit ; x++) {
-                taskShow[y] = tasks[x];
+                taskSh[y] = tasks[x];
                 y++;
             }
-            taskShow.cunot = j;
+            var count = j; 
+            taskShow[0] = count;
+            taskShow[1] = taskSh;
             ResponseHelper.buildResponse(res, error, taskShow);
         });
     }
