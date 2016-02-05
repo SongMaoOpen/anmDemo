@@ -63,16 +63,18 @@
                 num-pages="tasks.pageCount"
                 current-page="tasks.currentPage"
                 on-select-page="selectPage(page)">
-                <li ng-class="{disabled: noPrevious()}">
+                <li ng-show="myPar">
                     <a ng-click="selectPrevious()">&laquo;</a>
                 </li>
                 <li ng-repeat="page in pages"
                     ng-class="{active: isActive(page)}">
                     <a ng-click="selectPage(page)">{{page}}</a>
                 </li>
-                <li ng-class="{disabled: noNext()}">
-                    <a ng-click="selectNext()">&raquo;</a>
-                </li>
+				
+					<li ng-show = "myVar">
+						<a ng-click="selectNext()">&raquo;</a>
+					</li>
+				
             </ul>
 			 </paging>
 	   </div>

@@ -13,22 +13,11 @@
     }]);
 	// define controller
     app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
-    var _id;
-	//获取数据到分页
-	//var token = window.localStorage.getItem('token');
-  /*  $scope.rsData = [
-        {_id:'56a72e3b7c7c22b40de11742',name:'asdasda',create:'2016-01-26T08:28:43.599Z',deadline:'2016-01-26T08:28:43.599Z'},
-        {_id:'56a739c87c7c22b40de11744',name:'asdsa',create:'2016-01-26T09:18:00.930Z',deadline:'2016-01-26T09:18:00.930Z'},
-        {_id:'56a739cd7c7c22b40de11746',name:'lidasi',create:'2016-01-26T09:18:05.384Z',deadline:'2016-01-26T09:18:05.384Z'},
-        {_id:'four',name:'xpx',create:'bmldl',deadline:'owowxmma'},
-        {_id:'five',name:'bmeme',create:'o',deadline:'owowxmma'}
-    ];*/
-	var user ={};
 	var obj;
     var currentPage = 1;
     var max;
-    
-    
+    $scope.myVar = true;
+    $scope.myPar = true;
     var token = window.localStorage.getItem('token');
     $http.get(config.apiUrl + 'user', {
         headers: {
@@ -44,8 +33,21 @@
             taskId.num = currentPage;
                 
             $http.post(config.apiUrl + 'task/show', taskId).then(function(res){
-                   // $scope.rsData = res.data[0]; 
-                   
+                // $scope.rsData = res.data[0]; 
+                //控制上一页和下一页标签，当上一页标签等于1时隐藏上一页控件，
+                //当下一页标签到最大一页时隐藏下一页控件
+                if(currentPage == max){
+                    $scope.myVar = false;
+                } else {
+                    $scope.myVar = true;
+                }
+                if(currentPage == 1){
+                    $scope.myPar = false;
+                } else {
+                    $scope.myPar = true;
+                }
+                
+                $scope.pages = [];
                 var index=[];
                 var sumArr = 1;
                 var sum =0;
@@ -81,7 +83,7 @@
                         $scope.pages.push(i);
                     }
                 }
-                var correntPage = 1;
+               // var correntPage = 1;
                 
                // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
             });
@@ -89,13 +91,31 @@
            
     });
        
-   
-       
+
+
+
+    //下一页
     $scope.selectNext = function(){
-        
-        if(currentPage < max){
+        $scope.pages = [];
+        if(currentPage >= max){
+            $scope.myVar = false;
+        }
+        else{
             
             currentPage += 1;
+            
+            //控制上一页和下一页标签，当上一页标签等于1时隐藏上一页控件，
+            //当下一页标签到最大一页时隐藏下一页控件
+            if(currentPage == max){
+                $scope.myVar = false;
+            } else {
+                $scope.myVar = true;
+            }
+            if(currentPage == 1){
+                $scope.myPar = false;
+            } else {
+                $scope.myPar = true;
+            }
             $http.get(config.apiUrl + 'user', {
                 headers: {
                     Authorization: 'Bearer ' + token
@@ -149,19 +169,35 @@
                                 $scope.pages.push(i);
                             }
                         }
-                        var correntPage = 1;
+                       
                     } else {
                         alert('null');
                     }
                    // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
                 });   
             });
-        } 
+         
+        
+        }
     }
 	
+    //上一页
     $scope.selectPrevious = function(){
+        $scope.pages = [];
+        //控制上一页和下一页标签，当上一页标签等于1时隐藏上一页控件，
+        //当下一页标签到最大一页时隐藏下一页控件
         if(currentPage > 1){
             currentPage -= 1;
+            if(currentPage == 1){
+                $scope.myPar = false;
+            } else {
+                $scope.myPar = true;
+            }
+            if(currentPage == max){
+                $scope.myVar = false;
+            } else {
+                $scope.myVar = true;
+            }
             $http.get(config.apiUrl + 'user', {
                 headers: {
                     Authorization: 'Bearer ' + token
@@ -215,11 +251,10 @@
                                 $scope.pages.push(i);
                             }
                         }
-                        var correntPage = 1;
+                        //var correntPage = 1;
                     } else {
                         console.log('null');
                     }
-                   // $scope.rsData = [{_id:obj._id, name:obj.name, create:obj.create, deadline:obj.deadline}];
                 });   
             });
         } else {
@@ -227,8 +262,9 @@
         }
 	} 
     
-
+    //页码控制
     $scope.selectPage = function(page) {
+        
         currentPage = page;
         $http.get(config.apiUrl + 'user', {
             headers: {
@@ -244,7 +280,19 @@
             taskId.num = currentPage;
                 
             $http.post(config.apiUrl + 'task/show', taskId).then(function(res){
-                   // $scope.rsData = res.data[0]; 
+                // $scope.rsData = res.data[0]; 
+                //控制上一页和下一页标签，当上一页标签等于1时隐藏上一页控件，
+                //当下一页标签到最大一页时隐藏下一页控件
+                if(currentPage == max){
+                    $scope.myVar = false;
+                } else {
+                    $scope.myVar = true;
+                }
+                if(currentPage == 1){
+                    $scope.myPar = false;
+                } else {
+                    $scope.myPar = true;
+                }
                 if (res.data != null) {
                     var index=[];
                     var sumArr=currentPage*5-4;
@@ -284,7 +332,7 @@
                             $scope.pages.push(i);
                         }
                     }
-                    var correntPage = 1;
+                    //var correntPage = 1;
                 } else {
                     alert('null');
                 }
