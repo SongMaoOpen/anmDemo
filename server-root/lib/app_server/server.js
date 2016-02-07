@@ -91,6 +91,7 @@ module.exports = function(config, db) {
 
             var method = action.method.toUpperCase();
             var callback = action.execute;
+            logger.debug('Bind method', method, 'on path:', actionPath);
             if (method === 'GET') {
                 app.route(actionPath).get(callback);
             } else if (method === 'POST') {

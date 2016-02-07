@@ -1,7 +1,10 @@
 (function() {
     'use strict';
     var app = angular.module('anmApp', [
+            // Angular Module
             'ngRoute',
+
+            // Controllers
             'anmApp.main',
             'anmApp.signup',
             'anmApp.signin',
@@ -9,7 +12,9 @@
             'anmApp.updateTask',
             'anmApp.createTask',
             'anmApp.turnPage',
-            'userServices'
+
+            // Services
+            'anmApp.services'
     ]);
 
     // set router
@@ -21,4 +26,5 @@
     app.constant('config', {
         apiUrl: 'http://localhost:30001/services/'
     });
+
 }());

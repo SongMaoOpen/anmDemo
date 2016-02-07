@@ -1,15 +1,13 @@
 (function() {
-    var userServices = angular.module('userServices');
+    var app = angular.module('anmApp.services', []);
 
-    UserServices.factory('User', ['$http', 'config', function($http, config) {
-        return {
-            getMe: function() {
-                return $http(config.apiUrl + 'user', {
-                    headers: {
-                        Authorization: 'Bearer ' + window.localStorage.getItem('token')
-                    }
-                });
-            }
+    app.service('userService', function($http, config) {
+        this.getMe = function() {
+            return $http.get(config.apiUrl + 'user', {
+                headers: {
+                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
+                }
+            });
         };
-    }]);
-});
+    });
+}());
