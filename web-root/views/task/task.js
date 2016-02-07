@@ -13,7 +13,15 @@
     }]);
 
     // define controller
-    app.controller('taskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
+    app.controller('taskController', function($scope, $location, $http, config, $rootScope, userService) {
+
+        userService.getMe().then(function(response) {
+            console.log(response.data);
+        }).catch(function(response) {
+            console.log(response.data);
+        });
+
+        /*
         var obj;
         var currentPage = 1;
         var max;
@@ -404,5 +412,6 @@
 
         $scope.pages = 10;
         $scope.current = 5;
-    }]);
+        */
+    });
 }());
