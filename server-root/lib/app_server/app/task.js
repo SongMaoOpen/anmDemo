@@ -15,15 +15,15 @@ var task = {
     actions: {}
 };
 
-task.actions.createTask = {
-    path: 'createTask',
+task.actions.create = {
+    path: '',
     method: 'post',
-	permissionValidators: ['validateLogin'],
+    permissionValidators: ['validateLogin'],
     execute: function(req, res) {
-		var name = req.body.name || '';
+        var name = req.body.name || '';
         async.waterfall([function(callback) {
             var task = new Tasks({name: name});
-			task.save(function(error, task) {
+            task.save(function(error, task) {
                 if (error) {
                     callback(error);
                 } else {
@@ -33,7 +33,7 @@ task.actions.createTask = {
         }, function(task, callback) {
             var rUserCreateTasks = new RUserCreateTasks({
                 targetRef: task._id,
-                initiatorRef: MongoHelper.parseObjectId(req.body.userId)
+                initiatorRef: req.body.userId
             });
             rUserCreateTasks.save(function(error, rUserCreateTasks) {
                 if (error) {
@@ -48,20 +48,20 @@ task.actions.createTask = {
     }
 };
 
-task.actions.updateTask = {
-	path: 'updateTask',
-    method: 'post',
-	execute: function(req, res) {
-        var _id = req.body._id;
+task.actions.update = {
+    path: ':id',
+    method: 'put',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        var _id = req.params.id;
         var name = req.body.name || '';
-        var create = req.body.create || '';
         var deadline = req.body.deadline || '';
-        if (name.length === 0 || create.length === 0 || deadline.length === 0) {
+        if (name.length === 0) {
             ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
             return;
         }
         Tasks.findOne({
-            _id: _id
+            _id: MongoHelper.parseObjectId(_id)
         }, function(error, task) {
             if (error) {
                 ResponseHelper.buildResponse(res, error);
@@ -76,20 +76,28 @@ task.actions.updateTask = {
                     } else {
                         ResponseHelper.buildResponse(res, null, task);
                     }
-                })
+                });
             }
         });
     }
 };
 
-task.actions.remove = {
-    path: 'remove',
-    method: 'post',
-    execute: function (req, res) {
-        var taskId = req.body._id;
-        var task = 'success';
-        Tasks.remove({_id: taskId}).exec(function(error, task){
-            ResponseHelper.buildResponse(res, error, task);
+task.actions.delete = {
+    path: ':id',
+    method: 'delete',
+    permissionValidators: ['validateLogin'],
+    execute: function(req, res) {
+        var taskId = MongoHelper.parseObjectId(req.params.id);
+        async.waterfall([function(callback) {
+            Tasks.remove({_id: taskId}).exec(function(error) {
+                callback(error);
+            });
+        }, function(callback) {
+            RUserCreateTasks.remove({targetRef: taskId}).exec(function(error) {
+                callback(error);
+            });
+        }], function(error) {
+            ResponseHelper.buildResponse(res, error, {});
         });
     }
 };
@@ -99,14 +107,14 @@ task.actions.show = {
     method: 'post',
     execute: function(req, res) {
         var _id = req.body._id;
-        var pageNumber = req.body.num||1;
+        var pageNumber = req.body.num || 1;
         var resultsPerPage = 5;
         var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
         var limit = skipFrom + resultsPerPage;
-        RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task){
+        RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task) {
             var tasks = {};
             var j = 0;
-            for(var i = 0; i < task.length; i++){
+            for (var i = 0; i < task.length; i++) {
                 if (task[i].targetRef != null) {
                     tasks[j] = task[i].targetRef;
                     j++;
