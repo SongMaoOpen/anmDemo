@@ -16,7 +16,17 @@
     app.controller('taskController', function($scope, $location, $http, config, $rootScope, userService) {
 
         userService.getMe().then(function(response) {
+            $scope.user = response.data;
+        }).catch(function(response) {
             console.log(response.data);
+        });
+
+        $http.get(config.apiUrl + 'task', {
+            headers: {
+                Authorization: 'Bearer ' + window.localStorage.getItem('token')
+            }
+        }).then(function(response) {
+            $scope.tasks = response.data;
         }).catch(function(response) {
             console.log(response.data);
         });
