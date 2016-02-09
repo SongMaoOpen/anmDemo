@@ -64,9 +64,6 @@ module.exports = function(config, db) {
         extended: true
     }));
 
-    // Initilize checker fillter
-    app.use(require('./middleware/permissionValidator')(services));
-
     // Set error handler
     app.use(_errorHandleMiddleware);
     // =================== Setup Middleware End ===================

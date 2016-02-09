@@ -65,67 +65,71 @@ authorize.actions.login = {
 authorize.actions.refresh = {
     path: 'refresh',
     method: 'post',
-    permissionValidators: ['validateLogin'],
-    execute: function(req, res) {
-        // generate token
-        var token = jwt.sign({
-            user: req.body.userId
-        }, global.config.authorize.token.secret, {
-            issuer: global.config.authorize.token.issuer,
-            expiresIn: global.config.authorize.token.expiresIn
-        });
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            // generate token
+            var token = jwt.sign({
+                user: req.body.userId
+            }, global.config.authorize.token.secret, {
+                issuer: global.config.authorize.token.issuer,
+                expiresIn: global.config.authorize.token.expiresIn
+            });
 
-        async.waterfall([function(callback) {
-            Users.findOne({
-                _id: MongoHelper.parseObjectId(req.body.userId)
-            }, function(error, user) {
-                if (error) {
-                    callback(error);
-                } else if (user) {
-                    callback(ServerError.ERR_USER_IS_NOT_EXISTS);
-                } else {
-                    callback(null, user);
-                }
+            async.waterfall([function(callback) {
+                Users.findOne({
+                    _id: MongoHelper.parseObjectId(req.body.userId)
+                }, function(error, user) {
+                    if (error) {
+                        callback(error);
+                    } else if (user) {
+                        callback(ServerError.ERR_USER_IS_NOT_EXISTS);
+                    } else {
+                        callback(null, user);
+                    }
+                });
+            }, function(user, callback) {
+                user.token = token;
+                user.save(function(error, user) {
+                    callback(error, user);
+                });
+            }], function(error) {
+                ResponseHelper.buildResponse(res, error, {
+                    token: token
+                });
             });
-        }, function(user, callback) {
-            user.token = token;
-            user.save(function(error, user) {
-                callback(error, user);
-            });
-        }], function(error) {
-            ResponseHelper.buildResponse(res, error, {
-                token: token
-            });
-        });
-    }
+        }
+    ]
 };
 
 authorize.actions.logout = {
     path: 'logout',
     method: 'post',
-    permissionValidators: ['validateLogin'],
-    execute: function(req, res) {
-        async.waterfall([function(callback) {
-            Users.findOne({
-                _id: MongoHelper.parseObjectId(req.body.userId)
-            }, function(error, user) {
-                if (error) {
-                    callback(error);
-                } else if (user) {
-                    callback(ServerError.ERR_USER_IS_NOT_EXISTS);
-                } else {
-                    callback(null, user);
-                }
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            async.waterfall([function(callback) {
+                Users.findOne({
+                    _id: MongoHelper.parseObjectId(req.body.userId)
+                }, function(error, user) {
+                    if (error) {
+                        callback(error);
+                    } else if (user) {
+                        callback(ServerError.ERR_USER_IS_NOT_EXISTS);
+                    } else {
+                        callback(null, user);
+                    }
+                });
+            }, function(user, callback) {
+                user.token = null;
+                user.save(function(error, user) {
+                    callback(error, user);
+                });
+            }], function(error) {
+                ResponseHelper.buildResponse(res, error, {});
             });
-        }, function(user, callback) {
-            user.token = null;
-            user.save(function(error, user) {
-                callback(error, user);
-            });
-        }], function(error) {
-            ResponseHelper.buildResponse(res, error, {});
-        });
-    }
+        }
+    ]
 };
 
 module.exports = authorize;

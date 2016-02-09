@@ -18,88 +18,94 @@ var task = {
 task.actions.create = {
     path: '',
     method: 'post',
-    permissionValidators: ['validateLogin'],
-    execute: function(req, res) {
-        var name = req.body.name || '';
-        async.waterfall([function(callback) {
-            var task = new Tasks({name: name});
-            task.save(function(error, task) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(null, task);
-                }
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            var name = req.body.name || '';
+            async.waterfall([function(callback) {
+                var task = new Tasks({name: name});
+                task.save(function(error, task) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback(null, task);
+                    }
+                });
+            }, function(task, callback) {
+                var rUserCreateTasks = new RUserCreateTasks({
+                    targetRef: task._id,
+                    initiatorRef: req.body.userId
+                });
+                rUserCreateTasks.save(function(error, rUserCreateTasks) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback(null, task);
+                    }
+                });
+            }], function(error, task) {
+                ResponseHelper.buildResponse(res, error, task);
             });
-        }, function(task, callback) {
-            var rUserCreateTasks = new RUserCreateTasks({
-                targetRef: task._id,
-                initiatorRef: req.body.userId
-            });
-            rUserCreateTasks.save(function(error, rUserCreateTasks) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(null, task);
-                }
-            });
-        }], function(error, task) {
-            ResponseHelper.buildResponse(res, error, task);
-        });
-    }
+        }
+    ]
 };
 
 task.actions.update = {
     path: ':id',
     method: 'put',
-    permissionValidators: ['validateLogin'],
-    execute: function(req, res) {
-        var _id = req.params.id;
-        var name = req.body.name || '';
-        var deadline = req.body.deadline || '';
-        if (name.length === 0) {
-            ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
-            return;
-        }
-        Tasks.findOne({
-            _id: MongoHelper.parseObjectId(_id)
-        }, function(error, task) {
-            if (error) {
-                ResponseHelper.buildResponse(res, error);
-            } else if (!task) {
-                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
-            } else {
-                task.name = name;
-                task.deadline = deadline;
-                task.save(function(error, task) {
-                    if (error) {
-                        ResponseHelper.buildResponse(res, error);
-                    } else {
-                        ResponseHelper.buildResponse(res, null, task);
-                    }
-                });
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            var _id = req.params.id;
+            var name = req.body.name || '';
+            var deadline = req.body.deadline || '';
+            if (name.length === 0) {
+                ResponseHelper.buildResponse(res, ServerError.NotEnoughParam);
+                return;
             }
-        });
-    }
+            Tasks.findOne({
+                _id: MongoHelper.parseObjectId(_id)
+            }, function(error, task) {
+                if (error) {
+                    ResponseHelper.buildResponse(res, error);
+                } else if (!task) {
+                    ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+                } else {
+                    task.name = name;
+                    task.deadline = deadline;
+                    task.save(function(error, task) {
+                        if (error) {
+                            ResponseHelper.buildResponse(res, error);
+                        } else {
+                            ResponseHelper.buildResponse(res, null, task);
+                        }
+                    });
+                }
+            });
+        }
+    ]
 };
 
 task.actions.delete = {
     path: ':id',
     method: 'delete',
-    permissionValidators: ['validateLogin'],
-    execute: function(req, res) {
-        var taskId = MongoHelper.parseObjectId(req.params.id);
-        async.waterfall([function(callback) {
-            Tasks.remove({_id: taskId}).exec(function(error) {
-                callback(error);
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            var taskId = MongoHelper.parseObjectId(req.params.id);
+            async.waterfall([function(callback) {
+                Tasks.remove({_id: taskId}).exec(function(error) {
+                    callback(error);
+                });
+            }, function(callback) {
+                RUserCreateTasks.remove({targetRef: taskId}).exec(function(error) {
+                    callback(error);
+                });
+            }], function(error) {
+                ResponseHelper.buildResponse(res, error, {});
             });
-        }, function(callback) {
-            RUserCreateTasks.remove({targetRef: taskId}).exec(function(error) {
-                callback(error);
-            });
-        }], function(error) {
-            ResponseHelper.buildResponse(res, error, {});
-        });
-    }
+        }
+    ]
 };
 
 task.actions.show = {

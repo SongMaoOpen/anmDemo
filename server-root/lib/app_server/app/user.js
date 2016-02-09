@@ -72,21 +72,23 @@ user.actions.signup = {
 user.actions.getMe = {
     path: '',
     method: 'get',
-    permissionValidators: ['validateLogin'],
-    execute: function(req, res) {
-        var _id = MongoHelper.parseObjectId(req.body.userId);
-        Users.findOne({
-            _id: _id
-        }, function(error, user) {
-            if (error) {
-                ResponseHelper.buildResponse(res, error);
-            } else if (!user) {
-                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
-            } else {
-                ResponseHelper.buildResponse(res, null, user);
-            }
-        });
-    }
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            var _id = MongoHelper.parseObjectId(req.body.userId);
+            Users.findOne({
+                _id: _id
+            }, function(error, user) {
+                if (error) {
+                    ResponseHelper.buildResponse(res, error);
+                } else if (!user) {
+                    ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+                } else {
+                    ResponseHelper.buildResponse(res, null, user);
+                }
+            });
+        }
+    ]
 };
 
 // export module
