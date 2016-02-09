@@ -34,7 +34,7 @@ task.actions.create = {
             }, function(task, callback) {
                 var rUserCreateTasks = new RUserCreateTasks({
                     targetRef: task._id,
-                    initiatorRef: req.body.userId
+                    initiatorRef: MongoHelper.parseObjectId(req.body.userId)
                 });
                 rUserCreateTasks.save(function(error, rUserCreateTasks) {
                     if (error) {
@@ -108,38 +108,29 @@ task.actions.delete = {
     ]
 };
 
-task.actions.show = {
-    path: 'show',
-    method: 'post',
-    execute: function(req, res) {
-        var _id = req.body._id;
-        var pageNumber = req.body.num || 1;
-        var resultsPerPage = 5;
-        var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;
-        var limit = skipFrom + resultsPerPage;
-        RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, task) {
-            var tasks = {};
-            var j = 0;
-            for (var i = 0; i < task.length; i++) {
-                if (task[i].targetRef != null) {
-                    tasks[j] = task[i].targetRef;
-                    j++;
+task.actions.getAllByCurrentUser = {
+    path: '',
+    method: 'get',
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            var _id = MongoHelper.parseObjectId(req.body.userId);
+            RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, relations) {
+                if (error) {
+                    ResponseHelper.buildResponse(res, error);
+                    return;
                 }
-            }
-            var y = 0;
-            var taskShow = [];
-            var taskSh = {};
-            for (var x = skipFrom; x < limit ; x++) {
-                taskSh[skipFrom] = tasks[x];
-                skipFrom++;
-            }
-            var count = j;
-            taskShow[0] = taskSh;
-            taskShow[1] = count;
-            ResponseHelper.buildResponse(res, error, taskShow);
-            console.log(taskShow);
-        });
-    }
+
+                var tasks = [];
+                relations.forEach(function(element) {
+                    if (element.targetRef != null) {
+                        tasks.push(element.targetRef);
+                    }
+                });
+                ResponseHelper.buildResponse(res, null, tasks);
+            });
+        }
+    ]
 };
 
 task.actions.request = {
@@ -161,23 +152,26 @@ task.actions.request = {
     }
 };
 
-task.actions.getMe = {
-    path: '',
+task.actions.getOne = {
+    path: ':id',
     method: 'get',
-    execute: function(req, res) {
-        var _id = req.body.taskId;
-        Tasks.findOne({
-            _id: _id
-        }, function(error, task) {
-            if (error) {
-                ResponseHelper.buildResponse(res, error);
-            } else if (!task) {
-                ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
-            } else {
-                ResponseHelper.buildResponse(res, null, task);
-            }
-        });
-    }
+    execute: [
+        require('../middleware/validateLogin'),
+        function(req, res) {
+            var _id = MongoHelper.parseObjectId(req.params.id);
+            Tasks.findOne({
+                _id: _id
+            }, function(error, task) {
+                if (error) {
+                    ResponseHelper.buildResponse(res, error);
+                } else if (!task) {
+                    ResponseHelper.buildResponse(res, ServerError.ERR_NOT_LOGGED_IN);
+                } else {
+                    ResponseHelper.buildResponse(res, null, task);
+                }
+            });
+        }
+    ]
 };
 // export module
 module.exports = task;
