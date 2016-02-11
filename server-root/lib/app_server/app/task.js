@@ -113,9 +113,14 @@ task.actions.getAllByCurrentUser = {
     method: 'get',
     execute: [
         require('../middleware/validateLogin'),
+        require('../middleware/parsePageParam'),
         function(req, res) {
             var _id = MongoHelper.parseObjectId(req.body.userId);
-            RUserCreateTasks.find({'initiatorRef': _id}).populate('targetRef').exec(function(error, relations) {
+            var critrial = {
+                initiatorRef: _id
+            };
+            MongoHelper.queryPage(RUserCreateTasks.find(critrial).populate('targetRef').sort({create: -1}),
+                    RUserCreateTasks.find(critrial), req.query.pageNo, req.query.pageSize, function(error, relations, count) {
                 if (error) {
                     ResponseHelper.buildResponse(res, error);
                     return;
@@ -127,7 +132,10 @@ task.actions.getAllByCurrentUser = {
                         tasks.push(element.targetRef);
                     }
                 });
-                ResponseHelper.buildResponse(res, null, tasks);
+                ResponseHelper.buildResponse(res, null, tasks, {
+                    'X-PageNo': req.query.pageNo,
+                    'X-Count': count
+                });
             });
         }
     ]
