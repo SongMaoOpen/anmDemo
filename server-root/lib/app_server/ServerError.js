@@ -28,6 +28,7 @@ module.exports = {
     ERR_USER_IS_EXISTS: new ServerError(9003, 'User is exists.'),
     ERR_TOKEN: new ServerError(9004, 'Invalid token.'),
     ERR_USER_IS_NOT_EXISTS: new ServerError(9005, 'User is not exists.'),
+    ERR_PAGE_IS_NOT_EXISTS: new ServerError(9006, 'Page is not exists.'),
     ERR_UKNOWN: new ServerError(9999, 'Unknown Error.'),
     getUnKnownError: _getUnKnownError
 };
