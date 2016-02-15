@@ -14,7 +14,7 @@ MongoHelper.queryPaging = function(query, queryCount, pageNo, pageSize, callback
             if (error) {
                 callback(ServerError.getUnKnownError(error));
             } else {
-                if ((pageNo - 1) * pageSize >= count) {
+                if (pageNo * pageSize >= count) {
                     callback(errors.ERR_PAGE_IS_NOT_EXISTS);
                 } else {
                     callback(null, count);
@@ -22,7 +22,7 @@ MongoHelper.queryPaging = function(query, queryCount, pageNo, pageSize, callback
             }
         });
     }, function(count, callback) {
-        query.skip((pageNo - 1) * pageSize).limit(pageSize).exec(function(err, models) {
+        query.skip(pageNo * pageSize).limit(pageSize).exec(function(err, models) {
             if (err) {
                 callback(errors.getUnKnownError(err));
             } else {
