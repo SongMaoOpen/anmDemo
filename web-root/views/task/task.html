@@ -1,107 +1,74 @@
-﻿<div class="row">
-<h2>用户注册信息管理界面</h2>
-    <div class="jumbotron col-sm-12">
-       <div class="container">
-	   
-		<hr>
-		<button class="btn btn-success" ng-click="createTask()">
-			<span class="glyphicon glyphicon-user"></span>新增		
-		</button>
-	<hr>
-	 <paging>
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-			<th>序号</th>
-				<th>taskId</th>
-				<th>taskName</th>
-				<th>创建时间</th>
-				<th>结束时间</th>
-				<th>编辑</th>
-			</tr>
-		</thead>
-	
-			<tr ng-repeat="x in rsData track by $index">
-			
-				<td>
-						<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 levl3 ">
-							{{x.count}}
-						</div>
-					</td>
-					<td>
-						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4  levl3">
-							<span class=""> &nbsp;</span><span>{{x._id}}</span>
-						</div>
-					</td>
-					<td>
-						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-							{{x.name}}
-						</div>
-					</td>
-					<td>
-						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-							{{x.create}}
-						</div>
-					</td>
-					<td>
-						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-							{{x.deadline}}
-						</div>
-					</td>
-				<td width=200px>
-					<button class="btn btn-success btn-xs" ng-click="updateTask(x._id)">
-						<span class="glyphicon glyphicon-pencil"></span>修改
-					</button>
-					<button class="btn btn-danger btn-xs" ng-click="delTask(x._id)">
-						<span class="glyphicon glyphicon-remove"></span>删除
-					</button>
-				</td>
-				</tr>
-			</table>
-		
-			 <ul class="pagination"
-                num-pages="tasks.pageCount"
-                current-page="tasks.currentPage"
-                on-select-page="selectPage(page)">
-                <li ng-show="myPar">
-                    <a ng-click="selectPrevious()">&laquo;</a>
-                </li>
-                <li ng-repeat="page in pages"
-                    ng-class="{active: isActive(page)}">
-                    <a ng-click="selectPage(page)">{{page}}</a>
-                </li>
-				
-					<li ng-show = "myVar">
-						<a ng-click="selectNext()">&raquo;</a>
-					</li>
-				
-            </ul>
-			 </paging>
-	   </div>
+﻿<div class="container">
+    <div class="page-header">
+        <h1>用户注册信息管理界面</h1>
     </div>
-	<div class="row voffset-15">
+    <div class="row">
         <div class="col-sm-3">
-            <button class="btn btn-default btn-lg btn-block" ng-click="signOut()">
-                <i class="glyphicon glyphicon-off"></i> sign out
+            <button class="btn btn-primary" ng-click="createTask()">
+                <i class="fa fa-plus"></i> New Task
+            </button>
+        </div>
+        <div class="col-sm-offset-6 col-sm-1 text-right">
+            <h5><i class="fa fa-user"></i> {{user.username}}<h5>
+        </div>
+        <div class="col-sm-2 text-right">
+            <button class="btn btn-default" ng-click="createTask()">
+                <i class="fa fa-sign-out"></i> Sign Out
             </button>
         </div>
     </div>
 
-
-
-
-<script>
-
-</script>
-
-
-<!--
-<div class="row">
-    <div class="page-header col-sm-12">
-        <h1>你还没有登陆系统，请选择注册新账号或是登陆系统</h1>
+    <div class="row voffset-15">
+        <div class="col-sm-12">
+            <table class="table table-bordered table-hover">
+                <tr class="info">
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Deadline</th>
+                    <th>Create</th>
+                    <th>Edit</th>
+                </tr>
+                <tr ng-repeat="row in tasks track by $index">
+                    <td>{{$index + 1}}</td>
+                    <td>{{row._id}}</td>
+                    <td>{{row.name}}</td>
+                    <td>{{row.deadline}}</td>
+                    <td>{{row.create}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" ng-click="update(row._id)">
+                            <i class="fa fa-pencil-square-o"></i> 
+                        </button>
+                        <button class="btn btn-primary btn-sm" ng-click="delete(row._id)">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <nav>
+                <ul class="pagination">
+                    <li class="disabled">
+                        <span>
+                            <span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>
+                    <li class="active">
+                      <span>1 <span class="sr-only">(current)</span></span>
+                    </li>
+                    <li>
+                      <span>2<span class="sr-only">(current)</span></span>
+                    </li>
+                    <li class="">
+                        <span>
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
--->
-
-
-	
