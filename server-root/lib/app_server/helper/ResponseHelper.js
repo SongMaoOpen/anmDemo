@@ -35,6 +35,3 @@ ResponseHelper.buildResponse = function(res, error, data, header, beforeEndRespo
     _buildResponse(res, error, data, header, beforeEndResponse);
 };
 
-ResponseHelper.buildResponse = function(res, error, data, beforeEndResponse) {
-    _buildResponse(res, error, data, null, beforeEndResponse);
-};

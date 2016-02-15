@@ -15,18 +15,29 @@
     // define controller
     app.controller('taskController', function($scope, $location, $http, config, $rootScope, userService) {
 
+        $scope.user = {};
+        $scope.tasks = [];
+        $scope.pageInfo = {};
+
         userService.getMe().then(function(response) {
             $scope.user = response.data;
         }).catch(function(response) {
             console.log(response.data);
         });
 
-        $http.get(config.apiUrl + 'task', {
+        $http({
+            method: 'get',
+            url: config.apiUrl + 'task',
+            params: $scope.pageInfo,
             headers: {
                 Authorization: 'Bearer ' + window.localStorage.getItem('token')
             }
         }).then(function(response) {
             $scope.tasks = response.data;
+            $scope.pageInfo = {
+                count: response.headers('X-TotalPages'),
+                pageNo: response.headers('X-PageNo')
+            };
         }).catch(function(response) {
             console.log(response.data);
         });
