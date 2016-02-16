@@ -134,7 +134,7 @@ task.actions.getAllByCurrentUser = {
                 });
                 ResponseHelper.buildResponse(res, null, tasks, {
                     'X-PageNo': req.query.pageNo,
-                    'X-TotalPages': count
+                    'X-TotalCount': count
                 });
             });
         }
