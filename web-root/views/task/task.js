@@ -13,34 +13,98 @@
     }]);
 
     // define controller
-    app.controller('taskController', function($scope, $location, $http, config, $rootScope, userService) {
+    app.controller('taskController', function($scope, $location, $http, config, $rootScope, userService, taskService) {
+
+        // get task's resource
+        var Task = taskService.getFactory();
+
+        var getTasks = function() {
+            Task.query({
+                pageNo: $scope.pageInfo.pageNo
+            }, function(tasks, responseHeaders) {
+                $scope.tasks = tasks;
+                $scope.pageInfo = {
+                    count: responseHeaders('X-TotalCount'),
+                    pageNo: responseHeaders('X-PageNo'),
+                    totalPages: Math.ceil(responseHeaders('X-TotalCount') / config.perPageCount)
+                };
+            }, function(httpResponse) {
+                console.log(httpResponse);
+            });
+        };
 
         $scope.user = {};
         $scope.tasks = [];
-        $scope.pageInfo = {};
+        $scope.pageInfo = {
+            count: 0,
+            pageNo: 0
+        };
 
         userService.getMe().then(function(response) {
             $scope.user = response.data;
+            getTasks();
         }).catch(function(response) {
             console.log(response.data);
+            $location.path('/');
         });
 
-        $http({
-            method: 'get',
-            url: config.apiUrl + 'task',
-            params: $scope.pageInfo,
-            headers: {
-                Authorization: 'Bearer ' + window.localStorage.getItem('token')
+        // sign out
+        $scope.signout = function() {
+            $http.post(config.apiUrl + 'authorize/logout', {
+                headers: {
+                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
+                }
+            }).then(function() {
+                $location.path('/');
+            }).catch(function(response) {
+                $location.path('/');
+            });
+        };
+
+        // goto create task page
+        $scope.create = function() {
+        };
+
+        // goto update task page
+        $scope.update = function(task) {
+        };
+
+        // delete task
+        $scope.delete = function(task) {
+
+            task.$delete({id: task._id}).then(function(response) {
+                console.log(response);
+            }).catch(function(response) {
+                console.log(response);
+            });
+
+            getTasks();
+        };
+
+        // page navigation
+        $scope.prev = function() {
+            console.log('prev');
+            if ($scope.pageInfo.pageNo == 0) {
+                return;
             }
-        }).then(function(response) {
-            $scope.tasks = response.data;
-            $scope.pageInfo = {
-                count: response.headers('X-TotalPages'),
-                pageNo: response.headers('X-PageNo')
-            };
-        }).catch(function(response) {
-            console.log(response.data);
-        });
+            $scope.pageInfo.pageNo--;
+            getTasks();
+        };
+
+        $scope.next = function() {
+            console.log('next');
+            if ($scope.pageInfo.pageNo >= $scope.pageInfo.totalPages - 1) {
+                return;
+            }
+            $scope.pageInfo.pageNo++;
+            getTasks();
+        };
+
+        $scope.goto = function(n) {
+            console.log('goto', n);
+            $scope.pageInfo.pageNo = n;
+            getTasks();
+        };
 
         /*
         var obj;
