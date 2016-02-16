@@ -54,6 +54,7 @@ module.exports = function(req, res, next) {
 
             if (user.token === token) {
                 req.body.userId = decode.user;
+                logger.debug('end validate user login....');
                 next();
             } else {
                 next(ServerError.ERR_NOT_LOGGED_IN);
