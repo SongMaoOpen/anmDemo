@@ -15,7 +15,7 @@ MongoHelper.queryPaging = function(query, queryCount, pageNo, pageSize, callback
                 callback(ServerError.getUnKnownError(error));
             } else {
                 if (pageNo * pageSize >= count) {
-                    callback(errors.ERR_PAGE_IS_NOT_EXISTS);
+                    callback(null, []);
                 } else {
                     callback(null, count);
                 }
@@ -24,7 +24,7 @@ MongoHelper.queryPaging = function(query, queryCount, pageNo, pageSize, callback
     }, function(count, callback) {
         query.skip(pageNo * pageSize).limit(pageSize).exec(function(err, models) {
             if (err) {
-                callback(errors.getUnKnownError(err));
+                callback(ServerError.getUnKnownError(err));
             } else {
                 callback(err, models, count);
             }
