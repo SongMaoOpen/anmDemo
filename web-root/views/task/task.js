@@ -29,7 +29,9 @@
                     totalPages: Math.ceil(responseHeaders('X-TotalCount') / config.perPageCount)
                 };
             }, function(httpResponse) {
-                console.log(httpResponse);
+                if (httpResponse.status === 401) {
+                    $location.path('/');
+                }
             });
         };
 
@@ -44,8 +46,9 @@
             $scope.user = response.data;
             getTasks();
         }).catch(function(response) {
-            console.log(response.data);
-            $location.path('/');
+            if (response.status === 401) {
+                $location.path('/');
+            }
         });
 
         // sign out
