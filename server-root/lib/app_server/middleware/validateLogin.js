@@ -19,14 +19,12 @@ module.exports = function(req, res, next) {
     var authorization = req.header('Authorization');
 
     if (authorization == null || authorization.length === 0) {
-        next(ServerError.ERR_TOKEN);
-        return;
+        return next(ServerError.ERR_TOKEN);
     }
 
     var authHeaders = authorization.split(' ');
     if (authHeaders.length < 2 || authHeaders[0] !== 'Bearer') {
-        next(ServerError.ERR_TOKEN);
-        return;
+        return next(ServerError.ERR_TOKEN);
     }
 
     var token = authHeaders[1];
@@ -35,21 +33,18 @@ module.exports = function(req, res, next) {
         issuer: global.config.authorize.token.issuer
     }, (error, decode) => {
         if (error) {
-            next(ServerError.ERR_TOKEN);
-            return;
+            return next(ServerError.ERR_TOKEN);
         }
 
         Users.findOne({
             _id: MongoHelper.parseObjectId(decode.user),
         }, (error, user) => {
             if (error) {
-                next(ServerError.ERR_TOKEN);
-                return;
+                return next(ServerError.ERR_TOKEN);
             }
 
             if (user === null) {
-                next(ServerError.ERR_TOKEN);
-                return;
+                return next(ServerError.ERR_TOKEN);
             }
 
             if (user.token === token) {
@@ -57,7 +52,7 @@ module.exports = function(req, res, next) {
                 logger.debug('end validate user login....');
                 next();
             } else {
-                next(ServerError.ERR_NOT_LOGGED_IN);
+                return next(ServerError.ERR_NOT_LOGGED_IN);
             }
         });
     });

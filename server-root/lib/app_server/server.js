@@ -65,8 +65,6 @@ module.exports = function(config, db) {
         extended: true
     }));
 
-    // Set error handler
-    app.use(_errorHandleMiddleware);
     // =================== Setup Middleware End ===================
 
     // Set route
@@ -101,6 +99,10 @@ module.exports = function(config, db) {
             }
         }
     });
+
+    // Set error handler
+    app.use(_errorHandleMiddleware);
+
     logger.info('APP Server Startup');
 };
 
@@ -109,7 +111,13 @@ var _errorHandleMiddleware = function(error, req, res, next) {
         next();
     } else {
         logger.error(error);
-        res.status(500);
+        if (error.errorCode != null) {
+            if (error.errorCode === 9000 || error.errorCode === 9004) {
+                res.status(401);
+            }
+        } else {
+            res.status(500);
+        }
         ResponseHelper.buildResponse(res, error);
     }
 };
