@@ -1,5 +1,6 @@
-(function(){
-'use strict';
+(function() {
+    'use strict';
+
     // get ng-app
     var app = angular.module('anmApp.updateTask',['ngRoute']);
 
@@ -10,50 +11,32 @@
             controller: 'updateTaskController'
         });
     }]);
- // define controller
-    app.controller('updateTaskController', ['$rootScope','$scope', '$location', '$http', 'config', function($rootScope,$scope, $location, $http, config) {
-        $scope.error;
-	    var taskId = {_id:$location.search()._id};
-		
-        $http.post(config.apiUrl + 'task/request', taskId).then(function(response){
-            $scope.name = response.data.name;
-            $scope.create = response.data.create;
-            $scope.deadline = response.data.deadline;
-        });
-        // $scope.name = $location.search().name;
-        // $scope.create = $location.search().create;
-        // $scope.deadline = $location.search().deadline;
-        
-        /*$http.get(config.apiUrl + 'task', taskId).then(function(response){
-            $scope.name = response.data.name;
-            $scope.create = response.data.create;
-            $scope.deadline = response.data.deadline
-        })*/
-     
 
-        $scope.update = function(){
-		    var task = {
-                _id:$location.search()._id,
-                name:$scope.name,
-                create:$scope.create,
-                deadline:$scope.deadline,
-            };
-            $http.post(config.apiUrl + 'task/updateTask', task).then(function(response) {
-                if (response.data != null) {
-                    console.log('update success');s
-                    $location.path('/task');
-                    $location.replace();
-                } else {
-                    console.log('update error');
-                }           
+    // define controller
+    app.controller('updateTaskController', function($rootScope, $scope, $location, $http, config, taskService) {
+        $scope.error;
+        // get task's resource
+        var Task = taskService.getFactory();
+        var taskId = $location.search()._id;
+
+        Task.get({
+            id: taskId
+        }, function(task) {
+            $scope.task = task;
+        }, function() {
+        });
+
+        $scope.update = function(task) {
+            task.$save({
+                id: task._id
+            }).then(function(response) {
+                $scope.gotoMenu();
+            }).catch(function(response) {
             });
-       
-        }
-		 $scope.gotoMenu = function() {
-            $location.path('/task');
-            $location.replace();
         };
-       
-        
-    }]);
-}())
+
+        $scope.gotoMenu = function() {
+            $location.path('/task');
+        };
+    });
+}());

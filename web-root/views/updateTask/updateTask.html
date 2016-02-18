@@ -24,26 +24,9 @@
                 <span class="input-group-addon" id="username-addon">
                     <i class="fa fa-user fa-fw"></i>
                 </span>
-                <input type="text" class="form-control" name="name" value="{{name}}" aria-describedby="Username-addon" ng-model="name">
+                <input type="text" class="form-control" name="name" aria-describedby="Username-addon" ng-model="task.name">
             </div>
         </div>
-    </div>
-
-    <div class="row voffset-15">
-        <div class="col-sm-offset-3 col-sm-6">
-            <div class="input-group input-group-lg">
-                <span class="input-group-addon" id="password-addon">
-                    <span class="glyphicon glyphicon-time"></span>
-                </span>
-                <input type="text" id='datetimepicker4' class="form-control" name="content" value="{{create}}" aria-describedby="password-addon" ng-model="create">
-            </div>
-			
-        </div>
-		<script type="text/javascript">
-			$(function () {
-				$('#datetimepicker4').datetimepicker();
-			});
-		</script>
     </div>
 
 	 <div class="row voffset-15">
@@ -52,14 +35,14 @@
                 <span class="input-group-addon" id="password-addon">
                     <span class="glyphicon glyphicon-th"></span>
                 </span>
-                <input type="text" class="form-control" name="content" value="{{deadline}}" aria-describedby="password-addon" ng-model="deadline">
+                <input type="text" class="form-control" name="content" aria-describedby="password-addon" ng-model="task.deadline">
             </div>
         </div>
     </div>
 
     <div class="row voffset-15">
         <div class="col-sm-offset-3 col-sm-3">
-            <button class="btn btn-primary btn-lg btn-block" ng-click="update()">
+            <button class="btn btn-primary btn-lg btn-block" ng-click="update(task)">
                 <i class="fa fa-sign-in"></i> yes
             </button>
         </div>
