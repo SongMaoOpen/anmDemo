@@ -9,52 +9,37 @@
         $routeProvider.when('/createTask', {
             templateUrl: 'views/createTask/createTask.html',
             controller: 'createTaskController'
-        });	
+        });
     }]);
-			
-    // define controller
-    app.controller('createTaskController', ['$scope', '$location', '$http', 'config', '$rootScope', function($scope, $location, $http, config, $rootScope) {
-		var token = window.localStorage.getItem('token');
 
-		var task = {};
-		$scope.error = '';
-			
-			
+    // define controller
+    app.controller('createTaskController', function($scope, $location, $http, config, $rootScope, taskService) {
+
+        var token = window.localStorage.getItem('token');
+
+        var task = {};
+        $scope.error = '';
+
+        // get task's resource
+        var Task = taskService.getFactory();
 
         $scope.gotoMenu = function() {
             $location.path('/task');
-            //$location.replace();
         };
 
         $scope.createTask = function(task) {
-			
-           
-		   task.name = task.name;
-		   task.token = token;
-		  
-			
-            $http.post(config.apiUrl + 'task/createTask', task, {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            }).then(function(response) {    
-				if (response.data != null) {
-                    console.log('create success');
-                    $location.path('/task');
-                    $location.replace();
-                } else {
-                    console.log('create error');
-                }
-                if (data.errorInfo != null) {
-                    // Server API Error.
-                    $scope.error = data.errorInfo.description;
-                }
-            }, function(response) {
-				
-                //console.log(response);
-                $scope.error = 'Server Error!';
+            task.name = task.name;
+            task.token = token;
+
+            var newTask = new Task({
+                name: task.name
             });
-		
+
+            newTask.$create().then(function(response) {
+                $location.path('/task');
+            }).catch(function(response) {
+                console.log(response.data);
+            });
         };
-    }]);
+    });
 }());
