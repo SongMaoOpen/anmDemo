@@ -8,6 +8,7 @@ var logger = require('../../runtime/logger').getLogger();
 var Users = require('../../db_modules/models/users');
 
 // import helper
+var MongoHelper = require('../helper/MongoHelper');
 var ResponseHelper = require('../helper/ResponseHelper');
 var ServerError = require('../ServerError');
 
