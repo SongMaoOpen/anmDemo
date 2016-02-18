@@ -110,7 +110,7 @@ var _errorHandleMiddleware = function(error, req, res, next) {
     if (!error) {
         next();
     } else {
-        logger.error(error);
+        logger.error(error.message);
         if (error.errorCode != null) {
             if (error.errorCode === 9000 || error.errorCode === 9004) {
                 res.status(401);
