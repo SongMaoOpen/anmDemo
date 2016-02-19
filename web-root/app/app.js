@@ -14,7 +14,10 @@
             'anmApp.turnPage',
 
             // Services
-            'anmApp.services'
+            'anmApp.services',
+            // Directive
+            'anmApp.directive'
+
     ]);
 
     // define router
