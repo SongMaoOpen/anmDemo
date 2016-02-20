@@ -42,27 +42,9 @@
             pageNo: 0
         };
 
-        userService.getMe().then(function(response) {
-            $scope.user = response.data;
-            getTasks();
-        }).catch(function(response) {
-            if (response.status === 401) {
-                $location.path('/');
-            }
-        });
+        $scope.token = window.localStorage.getItem('token');
 
-        // sign out
-        $scope.signout = function() {
-            $http.post(config.apiUrl + 'authorize/logout', null, {
-                headers: {
-                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
-                }
-            }).then(function() {
-                $location.path('/');
-            }).catch(function(response) {
-                //$location.path('/');
-            });
-        };
+        getTasks();
 
         // goto create task page
         $scope.create = function() {
