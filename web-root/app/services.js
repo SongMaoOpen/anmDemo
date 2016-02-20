@@ -8,9 +8,19 @@
     };
 
     app.service('userService', function($http, config) {
-        this.getMe = function() {
+        this.getMe = function(authorizationKey) {
             return $http.get(config.apiUrl + 'user', {
-                headers: authorizationHeaders()
+                headers: {
+                    Authorization: 'Bearer ' + authorizationKey
+                }
+            });
+        };
+
+        this.signOut = function(authorizationKey) {
+            return $http.post(config.apiUrl + 'authorize/logout', null, {
+                headers: {
+                    Authorization: 'Bearer ' + authorizationKey
+                }
             });
         };
     });
