@@ -9,14 +9,7 @@
             </button>
         </div>
         <div class="col-sm-offset-7 col-sm-2">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user"></i> {{user.username}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a ng-click="signout()"><i class="fa fa-sign-out"></i> Sign Out</a></li>
-                </ul>
-            </div>
+            <user-panel token="token"></user-panel>
         </div>
     </div>
 
