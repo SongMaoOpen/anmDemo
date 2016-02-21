@@ -119,7 +119,7 @@ task.actions.getAllByCurrentUser = {
             var critrial = {
                 initiatorRef: _id
             };
-            MongoHelper.queryPage(RUserCreateTasks.find(critrial).populate('targetRef').sort({create: -1}),
+            MongoHelper.queryPaging(RUserCreateTasks.find(critrial).populate('targetRef').sort({create: -1}),
                     RUserCreateTasks.find(critrial), req.query.pageNo, req.query.pageSize, function(error, relations, count) {
                 if (error) {
                     ResponseHelper.buildResponse(res, error);
@@ -134,7 +134,7 @@ task.actions.getAllByCurrentUser = {
                 });
                 ResponseHelper.buildResponse(res, null, tasks, {
                     'X-PageNo': req.query.pageNo,
-                    'X-Count': count
+                    'X-TotalCount': count
                 });
             });
         }

@@ -14,17 +14,34 @@
             'anmApp.turnPage',
 
             // Services
-            'anmApp.services'
+            'anmApp.services',
+            // Directive
+            'anmApp.directive'
+
     ]);
 
-    // set router
+    // define router
     app.config(['$routeProvider', function($routeProvider) {
         $routeProvider.otherwise({redirectTo: '/'});
     }]);
 
-    // set constant
+    // define constant
     app.constant('config', {
-        apiUrl: 'http://localhost:30001/services/'
+        apiUrl: 'http://localhost:30001/services/',
+        perPageCount: 5
+    });
+
+    // define filter
+    app.filter('range', function() {
+        return function(input, end, begin) {
+            input = [];
+            begin = begin || 0;
+            for (var i = begin; i < end; i++) {
+                input.push(i);
+            }
+
+            return input;
+        };
     });
 
 }());

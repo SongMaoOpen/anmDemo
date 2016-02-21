@@ -4,12 +4,15 @@ var ServerError = function(errorCode, description, err) {
     Error.call(this, 'server error');
     this.errorCode = errorCode;
     this.description = description || _codeToString(errorCode);
+    this.message =  this.description;
     this.domain = 'ServerError';
     if (errorCode === 9999) {
         err = err || new Error();
         this.stack = err.stack;
     }
 };
+
+ServerError.prototype = Error.prototype;
 
 var _getUnKnownError =  function(error) {
     if (error instanceof Error) {

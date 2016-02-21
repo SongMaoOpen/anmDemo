@@ -8,6 +8,7 @@ var logger = require('../../runtime/logger').getLogger();
 var Users = require('../../db_modules/models/users');
 
 // import helper
+var MongoHelper = require('../helper/MongoHelper');
 var ResponseHelper = require('../helper/ResponseHelper');
 var ServerError = require('../ServerError');
 
@@ -41,7 +42,7 @@ authorize.actions.login = {
                         expiresIn: global.config.authorize.token.expiresIn
                     });
 
-                    logger.debug('user._id[', user._id, '], token:[', token, ']'); 
+                    logger.debug('user._id[', user._id, '], token:[', token, ']');
 
                     user.token = token;
                     user.save(function(error, user) {

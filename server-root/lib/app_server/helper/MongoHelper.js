@@ -12,19 +12,19 @@ MongoHelper.queryPaging = function(query, queryCount, pageNo, pageSize, callback
     async.waterfall([function(callback) {
         queryCount.count(function(error, count) {
             if (error) {
-                callback(ServerError.getUnknowError(error));
+                callback(ServerError.getUnKnownError(error));
             } else {
-                if ((pageNo - 1) * pageSize >= count) {
-                    callback(errors.ERR_PAGE_IS_NOT_EXISTS);
+                if (pageNo * pageSize >= count) {
+                    callback(null, []);
                 } else {
                     callback(null, count);
                 }
             }
         });
     }, function(count, callback) {
-        query.skip((pageNo - 1) * pageSize).limit(pageSize).exec(function(err, models) {
+        query.skip(pageNo * pageSize).limit(pageSize).exec(function(err, models) {
             if (err) {
-                callback(errors.genUnkownError(err));
+                callback(ServerError.getUnKnownError(err));
             } else {
                 callback(err, models, count);
             }

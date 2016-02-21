@@ -4,17 +4,12 @@
     </div>
     <div class="row">
         <div class="col-sm-3">
-            <button class="btn btn-primary" ng-click="createTask()">
+            <button class="btn btn-primary" ng-click="create()">
                 <i class="fa fa-plus"></i> New Task
             </button>
         </div>
-        <div class="col-sm-offset-6 col-sm-1 text-right">
-            <h5><i class="fa fa-user"></i> {{user.username}}<h5>
-        </div>
-        <div class="col-sm-2 text-right">
-            <button class="btn btn-default" ng-click="createTask()">
-                <i class="fa fa-sign-out"></i> Sign Out
-            </button>
+        <div class="col-sm-offset-7 col-sm-2">
+            <user-panel token="token"></user-panel>
         </div>
     </div>
 
@@ -36,10 +31,10 @@
                     <td>{{row.deadline}}</td>
                     <td>{{row.create}}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm" ng-click="update(row._id)">
+                        <button class="btn btn-primary btn-sm" ng-click="update(row)">
                             <i class="fa fa-pencil-square-o"></i> 
                         </button>
-                        <button class="btn btn-primary btn-sm" ng-click="delete(row._id)">
+                        <button class="btn btn-primary btn-sm" ng-click="delete(row)">
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </td>
@@ -51,18 +46,15 @@
         <div class="col-sm-12">
             <nav>
                 <ul class="pagination">
-                    <li class="disabled">
+                    <li class="ng-class: {disabled: pageInfo.pageNo == 0}" ng-click="prev()">
                         <span>
                             <span aria-hidden="true">&laquo;</span>
                         </span>
                     </li>
-                    <li class="active">
-                      <span>1 <span class="sr-only">(current)</span></span>
+                    <li class="ng-class:{active: pageInfo.pageNo == n}" ng-repeat="n in [] | range: pageInfo.totalPages" ng-click="goto(n)">
+                        <span>{{ n + 1 }}<span class="sr-only" ng-show="pageInfo.pageNo == n">(current)</span></span>
                     </li>
-                    <li>
-                      <span>2<span class="sr-only">(current)</span></span>
-                    </li>
-                    <li class="">
+                    <li class="ng-class: {disabled: pageInfo.pageNo >= pageInfo.totalPages}" ng-click="next()">
                         <span>
                             <span aria-hidden="true">&raquo;</span>
                         </span>
