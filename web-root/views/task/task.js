@@ -20,13 +20,12 @@
 
         var getTasks = function() {
             Task.query({
-                pageNo: $scope.pageInfo.pageNo
+                pageNo: $scope.pageInfo.pageNo - 1
             }, function(tasks, responseHeaders) {
                 $scope.tasks = tasks;
                 $scope.pageInfo = {
                     count: responseHeaders('X-TotalCount'),
-                    pageNo: responseHeaders('X-PageNo'),
-                    totalPages: Math.ceil(responseHeaders('X-TotalCount') / config.perPageCount)
+                    pageNo: parseInt(responseHeaders('X-PageNo')) + 1
                 };
             }, function(httpResponse) {
                 if (httpResponse.status === 401) {
@@ -39,7 +38,7 @@
         $scope.tasks = [];
         $scope.pageInfo = {
             count: 0,
-            pageNo: 0
+            pageNo: 1,
         };
 
         $scope.token = window.localStorage.getItem('token');

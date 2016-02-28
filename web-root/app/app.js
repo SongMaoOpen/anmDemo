@@ -3,6 +3,7 @@
     var app = angular.module('anmApp', [
             // Angular Module
             'ngRoute',
+            'ui.bootstrap',
 
             // Controllers
             'anmApp.main',
@@ -44,4 +45,7 @@
         };
     });
 
+    app.run(['$rootScope', 'config', function($rootScope, config) {
+        $rootScope.itemsPerPages = 5;
+    }]);
 }());

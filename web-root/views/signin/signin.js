@@ -14,7 +14,7 @@
 
     // define controller
     app.controller('SignInController', function($scope, $location, $http, config) {
-        $scope.error;
+        $scope.error = [];
 
         $scope.gotoMenu = function() {
             $location.path('/');
@@ -24,13 +24,13 @@
             $http.post(config.apiUrl + 'authorize', user).then(function(response) {
                 var msg = response.data;
                 if (msg.errorInfo != null) {
-                    $scope.error = msg.errorInfo.description;
+                    $scope.error = [msg.errorInfo.description];
                 } else {
                     window.localStorage.setItem('token', msg.token);
                     $location.path('/task');
                 }
             }).catch(function(response) {
-                $scope.error = 'Server Error!';
+                $scope.error = ['Server Error!'];
             });
         };
     });

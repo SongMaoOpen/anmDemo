@@ -44,23 +44,8 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <nav>
-                <ul class="pagination">
-                    <li class="ng-class: {disabled: pageInfo.pageNo == 0}" ng-click="prev()">
-                        <span>
-                            <span aria-hidden="true">&laquo;</span>
-                        </span>
-                    </li>
-                    <li class="ng-class:{active: pageInfo.pageNo == n}" ng-repeat="n in [] | range: pageInfo.totalPages" ng-click="goto(n)">
-                        <span>{{ n + 1 }}<span class="sr-only" ng-show="pageInfo.pageNo == n">(current)</span></span>
-                    </li>
-                    <li class="ng-class: {disabled: pageInfo.pageNo >= pageInfo.totalPages}" ng-click="next()">
-                        <span>
-                            <span aria-hidden="true">&raquo;</span>
-                        </span>
-                    </li>
-                </ul>
-            </nav>
+            <uib-pagination total-items="pageInfo.count" ng-model="pageInfo.pageNo" items-per-page="itemsPerPages" previous-text="&lsaquo;" next-text="&rsaquo;">
+            </uib-pagination>
         </div>
     </div>
 </div>
